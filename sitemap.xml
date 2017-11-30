@@ -3,7 +3,17 @@
 
     <sitemap>
         <loc>http://samohyes.github.io/post-sitemap.xml</loc>
-        <lastmod>2017-11-30T20:42:30.774Z</lastmod>
+        <lastmod>2017-11-30T22:53:23.036Z</lastmod>
+    </sitemap>
+
+    <sitemap>
+        <loc>http://samohyes.github.io/category-sitemap.xml</loc>
+        <lastmod>2017-11-30T22:53:23.036Z</lastmod>
+    </sitemap>
+
+    <sitemap>
+        <loc>http://samohyes.github.io/tag-sitemap.xml</loc>
+        <lastmod>2017-11-30T22:53:23.036Z</lastmod>
     </sitemap>
 
 </sitemapindex>

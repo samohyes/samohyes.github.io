@@ -7,11 +7,10 @@
     </url>
 
     <url>
-        <loc>http://samohyes.github.io/2017/11/30/Malware-analysis-GINA-interception/</loc>
+        <loc>http://samohyes.github.io/categories/Malware-analysis/</loc>
         <lastmod>2017-11-30T22:53:23.036Z</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
+        <priority>0.2</priority>
     </url>
 
 </urlset>
