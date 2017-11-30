@@ -81,7 +81,7 @@
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Xudong">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:url" content="http://yoursite.com/archives/2017/11/index.html">
 <meta property="og:site_name" content="Xudong">
 <meta property="og:locale" content="English">
 <meta name="twitter:card" content="summary">
@@ -115,13 +115,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/archives/2017/11/"/>
 
 
 
 
 
-  <title> Hexo, NexT - Xudong </title>
+  <title>Archive | Xudong</title>
   
 
 
@@ -140,8 +140,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-archive">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -214,153 +213,75 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
-    
+
+  
+  
+  
+  <div class="post-block archive">
+    <div id="posts" class="posts-collapse">
+      <span class="archive-move-on"></span>
+
+      <span class="archive-page-counter">
+        
+        
+        
+          
+        
+        Um..! 1 post. Keep on posting.
+      </span>
+
       
 
-  
+        
+        
+        
 
-  
-  
-  
+        
+          
+          <div class="collection-title">
+            <h1 class="archive-year" id="archive-year-2017">2017</h1>
+          </div>
+        
+        
+
+        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/30/Malware-analysis-GINA-interception/">
+    <header class="post-header">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Xudong">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Xudong">
-    </span>
-
-    
-      <header class="post-header">
-
+      <h2 class="post-title">
         
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/30/Malware-analysis-GINA-interception/" itemprop="url">Malware analysis: GINA interception</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
+            <a class="post-title-link" href="/2017/11/30/Malware-analysis-GINA-interception/" itemprop="url">
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span itemprop="name">Malware analysis: GINA interception</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-30T14:06:11-06:00">
-                2017-11-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
+            </a>
         
-          
-            <p>This malware is from <b><i>Practical Malware Analysis</i></b> Lab 11-1. I will start from this book and probably include some malwares from other sources in the future.</p>
-<p></p><h3><b><u>Static analysis</u></b></h3><br>I always start from basic static analysis and this is probably what most people will do. PEID shows this file has no packer. So we just start analysis straightforward. Since we know nothing about this malware right now. I simply use the string.exe in the SysinternalSuite to find useful clues. After applying this, I see some interesting strings in the .exe file.<p></p>
-<p>&#149; Software\Microsoft\Windows NT\CurrentVersion\Winlogon<br>&#149;    Msgina.dll<br>&#149;    Many functions with Wlx prefix</p>
-<p>This result makes me believe this malware sample is likely doing GINA interception. What is GINA interception? GINA means Graphical Identification and Authentication. This allows third-party customizing the logon process. So likely malwares can take advantage of this process. Basically, GINA works like this: winlogon.exe call the msgina.dll. And what third parties can do is to insert a .dll between the winlogon.exe and the msgina.dll which looks like this:</p>
-<p>Winlogon.exe &#8594; malicious.dll &#8594; msgina.dll</p>
-<p>So in this case, we can see that malicious.dll should can get the password from winlogon.exe. But it also has to make sure that it exports those functions needed by msgina.dll and most of these functions has prefix of Wlx. Also in order to let winlogon.exe call the malicious.dll it has to change a value in registry which is the first string that we are interested in.</p>
-<p>After this, I’d love to use the dependency worker and CFF to see what’s in this file. This is what we got from the dependency worker.</p>
-<img src="/2017/11/30/Malware-analysis-GINA-interception/1.png" title="this is it">
-<p>We find that the file imports KERNEL32.DLL and ADVAPI32.DLL. In KERNEL32.DLL, there are CreateFile and WriteFile. Also I use CFF and find there is a .rsrc section whose virtual size is much bigger than raw size. Combining these two clues, I think it probably will drop a file. And we also see the ADVAPI32.DLL which changed the registry that we mentioned before. After this, it’s time for us to start dynamic analysis.</p>
-<p></p><h3><b><u>Dynamic analysis</u></b></h3><br>I will start regshot and Process Monitor right now. And after double clicking the malware we can see that there is a msgina32.dll in the same directory which should be the man-in-the-middle .dll in the GINA interception attack.<p></p>
-<p>Also we see there is a change to<br><b><i>HKLM\Software\Microsoft\WindowsNT\CurrentVersion\Winlogon\GinaDLL</i></b><br>from regshot. So we go to this registry key and find its value is <b><i>C:\msgina.dll</i></b> which is the directory for that malicious .dll the file dropped. This is how it achieves GINA interception.</p>
-<p>From Process Monitor, we didn’t find anything it create except the msgina.dll. So probably it will create a file after the system reboots and writes the login information into that file.</p>
-<p></p><h3><b><u>Advanced analysis</u></b></h3><br>Let’s load the msgina32.dll into ida. We will see this branch in the DLLmain function.<p></p>
-<img src="/2017/11/30/Malware-analysis-GINA-interception/2.png">
-<p>The left side is the function to load the original msgina.dll. We can see the code mov hModule,eax here which is used to indicate which function that msgina32.dll is going to call from the msgina.dll to make sure that the whole login process is fine. You can check that in the export functions of msgina32.dll it uses this to get the address of the functions in the msgina.dll.</p>
-<p>So what the malicious can do is to change the export functions. Which means that it can do something before it call the function in the msgina.dll. After searching for a while, we find the export function <b>WlxloggedoutSAS</b> is suspicious because it contains more things than others.</p>
-<img src="/2017/11/30/Malware-analysis-GINA-interception/3.png">
-<p>Let’s click the sub_1ooo1570, we finally see how the .dll save the login information.</p>
-<img src="/2017/11/30/Malware-analysis-GINA-interception/4.png">
-<p>Here is the <b>“msutil32.sys”</b> which seems like a driver file but it is just used to save information. This is located at <b><i>C:\Windows\system32</i></b> where the logon.exe is. </p>
-<p>So you can just logout and login on windows so you will see that the password is in the file right now.</p>
-<p>So we are nearly done with this malicious binary. You can do more if you want. </p>
-<p>Any questions, you can contact me at<br><b><i>xudong_shao@hotmail.com</i></b></p>
+      </h2>
 
-          
-        
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2017-11-30T14:06:11-06:00"
+              content="2017-11-30" >
+          11-30
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+
       
+
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
   
   
   
-  </article>
-
-
-    
-  </section>
 
   
+
 
 
           </div>
