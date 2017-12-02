@@ -3,14 +3,21 @@
 
     <url>
         <loc>http://samohyes.github.io/tags/Malware-analysis/</loc>
-        <lastmod>2017-12-02T03:29:32.114Z</lastmod>
+        <lastmod>2017-12-02T03:31:02.472Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>http://samohyes.github.io/tags/2017/</loc>
-        <lastmod>2017-12-02T03:29:32.114Z</lastmod>
+        <lastmod>2017-12-02T03:31:02.472Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://samohyes.github.io/tags/windows/</loc>
+        <lastmod>2017-12-02T03:31:02.472Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
