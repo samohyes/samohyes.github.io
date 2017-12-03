@@ -7,6 +7,14 @@
     </url>
 
     <url>
+        <loc>http://samohyes.github.io/2017/12/02/Malware-analysis-Inline-hooking-PMA-11-02/</loc>
+        <lastmod>2017-12-03T03:51:38.997Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://samohyes.github.io/2017/11/30/Malware-analysis-GINA-interception/</loc>
         <lastmod>2017-12-02T14:51:47.962Z</lastmod>
         <changefreq>weekly</changefreq>
