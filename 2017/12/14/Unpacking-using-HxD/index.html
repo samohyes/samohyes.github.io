@@ -46,7 +46,7 @@
 <meta property="og:image" content="http://samohyes.github.io/2017/12/14/Unpacking-using-HxD/2.png">
 <meta property="og:image" content="http://samohyes.github.io/2017/12/14/Unpacking-using-HxD/3.png">
 <meta property="og:image" content="http://samohyes.github.io/2017/12/14/Unpacking-using-HxD/4.png">
-<meta property="og:updated_time" content="2017-12-15T00:36:36.864Z">
+<meta property="og:updated_time" content="2017-12-15T00:37:52.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Unpacking: using HxD">
 <meta name="twitter:description" content="Today, let’s unpack a malware named Fleercivet. Before we start, I have to say that the MalwareAnalysisForHegehogs has already done a quite good video tutorial for this sample, you can check it out he">
@@ -138,7 +138,7 @@
 <div class="video-container"><iframe src="//www.youtube.com/embed/BCis7FwffiU" frameborder="0" allowfullscreen></iframe></div>
 <p>So, let’t see how we can unpack it using a different way.</p>
 <p>The first part is unpacking. In the video they did quite well using the breakpoint at <b><i>VirtualAlloc</i></b> and I also write a post on this method so you can check it out too.</p>
-<p>“<a href="http://xdshao.com/2017/12/10/Unpacking-bp-VirtualAlloc/" target="_blank" rel="noopener">http://xdshao.com/2017/12/10/Unpacking-bp-VirtualAlloc/</a>“</p>
+<p><a href="http://xdshao.com/2017/12/10/Unpacking-bp-VirtualAlloc/" target="_blank" rel="noopener">http://xdshao.com/2017/12/10/Unpacking-bp-VirtualAlloc/</a></p>
 <p>But for this sample, you can see that the speaker used a plugin to dump the memory and unpack it. To be honest, I can’t find the plugin and the link they provide seems not working anymore. So here, I use another way to achieve the same purpose.</p>
 <p>Let’s say you follow the video and come to this step where you see at the address 0X3A0000 you find “MZ” which is the start of the PE format. To be more specific, it’s the start of the DOS header.</p>
 <img src="/2017/12/14/Unpacking-using-HxD/1.png">
