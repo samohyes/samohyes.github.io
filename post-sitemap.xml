@@ -7,8 +7,16 @@
     </url>
 
     <url>
+        <loc>http://samohyes.github.io/2017/12/20/Malware-analysis-Dridex-and-process-hollowing/</loc>
+        <lastmod>2017-12-20T19:35:15.893Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://samohyes.github.io/2017/12/19/Crackme-1/</loc>
-        <lastmod>2017-12-20T19:29:56.339Z</lastmod>
+        <lastmod>2017-12-20T19:32:59.673Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -25,14 +33,6 @@
     <url>
         <loc>http://samohyes.github.io/2017/12/02/Malware-analysis-Inline-hooking-PMA-11-02/</loc>
         <lastmod>2017-12-20T19:23:34.623Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://samohyes.github.io/2017/12/20/Malware-analysis-Dridex-and-process-hollowing/</loc>
-        <lastmod>2017-12-20T19:00:01.345Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
