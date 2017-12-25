@@ -39,10 +39,19 @@
 <meta property="og:url" content="http://samohyes.github.io/2017/12/25/Unpacking-a-cryptocurrency-miner/index.html">
 <meta property="og:site_name" content="Xudong">
 <meta property="og:description" content="Today, we will try to unpack a cryptocurrency miner one section by one section. And actually here is already a very good tutorial. And I almost follow its instructions. First, set breakpoint on WriteP">
-<meta property="og:updated_time" content="2017-12-25T21:32:08.059Z">
+<meta property="og:image" content="http://samohyes.github.io/2017/12/25/Unpacking-a-cryptocurrency-miner/1.PNG">
+<meta property="og:image" content="http://samohyes.github.io/2017/12/25/Unpacking-a-cryptocurrency-miner/2.PNG">
+<meta property="og:image" content="http://samohyes.github.io/2017/12/25/Unpacking-a-cryptocurrency-miner/3.PNG">
+<meta property="og:image" content="http://samohyes.github.io/2017/12/25/Unpacking-a-cryptocurrency-miner/4.PNG">
+<meta property="og:image" content="http://samohyes.github.io/2017/12/25/Unpacking-a-cryptocurrency-miner/5.PNG">
+<meta property="og:image" content="http://samohyes.github.io/2017/12/25/Unpacking-a-cryptocurrency-miner/6.PNG">
+<meta property="og:image" content="http://samohyes.github.io/2017/12/25/Unpacking-a-cryptocurrency-miner/7.PNG">
+<meta property="og:image" content="http://samohyes.github.io/2017/12/25/Unpacking-a-cryptocurrency-miner/8.PNG">
+<meta property="og:updated_time" content="2017-12-25T21:37:58.348Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Unpacking: a cryptocurrency miner">
 <meta name="twitter:description" content="Today, we will try to unpack a cryptocurrency miner one section by one section. And actually here is already a very good tutorial. And I almost follow its instructions. First, set breakpoint on WriteP">
+<meta name="twitter:image" content="http://samohyes.github.io/2017/12/25/Unpacking-a-cryptocurrency-miner/1.PNG">
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
@@ -128,21 +137,21 @@
             <div class="post-content">
             <p>Today, we will try to unpack a cryptocurrency miner one section by one section. And actually here is already a very good tutorial. And I almost follow its instructions.</p>
 <p>First, set breakpoint on WriteProcessMemory.<br>When the first “WriteProcessMemory” hit, dump the PE in the memory.</p>
-
+<img src="/2017/12/25/Unpacking-a-cryptocurrency-miner/1.PNG">
 <p>You have to delete the trash before the “MZ” to make it a legitimate PE format. Then run again, dump the PE in memory to see if there is any difference between the 1st and 2nd edition. Actually they are just the same file.</p>
-
+<img src="/2017/12/25/Unpacking-a-cryptocurrency-miner/2.PNG">
 <p>So run again, dump again.</p>
-
+<img src="/2017/12/25/Unpacking-a-cryptocurrency-miner/3.PNG">
 <p>This time, the 2nd and 3rd PE file are different in the <b><i>.text</i></b> section. So let’s save that <b><i>.text</i></b> section aside. Run again and dump the 4th edition.</p>
-
+<img src="/2017/12/25/Unpacking-a-cryptocurrency-miner/4.PNG">
 <p>This time, we can see that the <b><i>.text</i></b> section is actually filled with 00 in 4th one. And its <b><i>.rdata</i></b> section is different with the 3rd one while the other two sections are the same. So just save the <b><i>.rdata</i></b> section.<br>Run again.</p>
-
+<img src="/2017/12/25/Unpacking-a-cryptocurrency-miner/5.PNG">
 <p>This time the <b><i>.data</i></b> section changed. So save that section. The last one changed the <b><i>.reloc</i></b> section.</p>
-
+<img src="/2017/12/25/Unpacking-a-cryptocurrency-miner/6.PNG">
 <p>So we have the 6th edition. Because the malware only write one section a time. So for the 6th editon, it only has a valid section which is the <b><i>.reloc</i></b> section. Remember we save some sections before? Yeah, all you need to do is to substitute other sections in 6th edition with those sections we saved before.  </p>
-
+<img src="/2017/12/25/Unpacking-a-cryptocurrency-miner/7.PNG">
 <p>Then you get an unpacked PE. Just save that.<br>Ok, the malware might use process injection and typically might be process hollowing to start a child process of its own and replace that. You can have a check with my post about this.</p>
-
+<img src="/2017/12/25/Unpacking-a-cryptocurrency-miner/8.PNG">
 <p>So here we can use the Scylla to dump that child process out.<br>But to be honest, I dumped that child process and compare it with the one that we filled with each section. They are different. The one I dumped is different and there must be something wrong with my dump method. I just don’t know why after many hours’ trying.</p>
 <p>Yeah, that’s it. </p>
 <p>Any question, please contact me at <b><i>xudong_shao@hotmail.com</i></b></p>
