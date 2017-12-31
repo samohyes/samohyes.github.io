@@ -7,6 +7,22 @@
     </url>
 
     <url>
+        <loc>http://samohyes.github.io/2017/12/31/Malware-analysis-a-wrapped-bat-ransomware/</loc>
+        <lastmod>2017-12-31T21:44:07.957Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://samohyes.github.io/2017/12/27/Android-reverse-Https-packet-and-IDEA-debugging/</loc>
+        <lastmod>2017-12-31T21:39:20.975Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://samohyes.github.io/2017/12/02/Malware-analysis-Inline-hooking-PMA-11-02/</loc>
         <lastmod>2017-12-29T04:49:50.192Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -41,14 +57,6 @@
     <url>
         <loc>http://samohyes.github.io/2017/12/24/Malware-analysis-a-funny-NET-ransomware/</loc>
         <lastmod>2017-12-29T04:49:09.273Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://samohyes.github.io/2017/12/27/Android-reverse-Https-packet-and-IDEA-debugging/</loc>
-        <lastmod>2017-12-28T05:44:59.144Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
