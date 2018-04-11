@@ -7,6 +7,14 @@
     </url>
 
     <url>
+        <loc>http://samohyes.github.io/2018/04/10/Android-exploitation-Kernel-stack-buffer-overflow/</loc>
+        <lastmod>2018-04-11T03:38:50.335Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://samohyes.github.io/2018/03/24/Unpacking-3-interestring-unpacking-cases/</loc>
         <lastmod>2018-03-25T20:16:49.442Z</lastmod>
         <changefreq>weekly</changefreq>
