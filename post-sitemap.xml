@@ -7,14 +7,6 @@
     </url>
 
     <url>
-        <loc>http://samohyes.github.io/2018/05/18/have-a-try/</loc>
-        <lastmod>2018-05-17T23:58:24.420Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
         <loc>http://samohyes.github.io/2018/04/10/Android-exploitation-Kernel-stack-buffer-overflow/</loc>
         <lastmod>2018-04-29T10:49:44.000Z</lastmod>
         <changefreq>weekly</changefreq>
