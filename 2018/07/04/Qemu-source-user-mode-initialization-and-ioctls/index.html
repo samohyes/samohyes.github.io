@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="Qemu source: user mode initialization and ioctls"/>
+
+
+
+
+  <meta name="keywords" content="2018,Qemu," />
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Xudong">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/1.jpg?v=1.1" />
+
+
+
+<link rel="canonical" href="http://samohyes.github.io/2018/07/04/Qemu-source-user-mode-initialization-and-ioctls/"/>
+
+
+<meta name="description" content="For past few weeks, I’ve been reading qemu source code and cross compiling it for android. I was going to fuzz some binaries. But I can’t go into details about ">
+<meta name="keywords" content="2018,Qemu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Qemu source: user mode initialization and ioctls">
+<meta property="og:url" content="http://samohyes.github.io/2018/07/04/Qemu-source-user-mode-initialization-and-ioctls/index.html">
+<meta property="og:site_name" content="Xudong">
+<meta property="og:description" content="For past few weeks, I’ve been reading qemu source code and cross compiling it for android. I was going to fuzz some binaries. But I can’t go into details about that projects so here I just share some">
+<meta property="og:updated_time" content="2018-07-04T14:47:55.582Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Qemu source: user mode initialization and ioctls">
+<meta name="twitter:description" content="For past few weeks, I’ve been reading qemu source code and cross compiling it for android. I was going to fuzz some binaries. But I can’t go into details about that projects so here I just share some">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Qemu source: user mode initialization and ioctls - Xudong </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Xudong</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Qemu source: user mode initialization and ioctls
+        
+      </h1>
+
+      <time class="post-time">
+          Jul 04 2018
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>For past few weeks, I’ve been reading qemu source code and cross compiling it for android. I was going to fuzz some binaries. But I can’t go into details about that projects so here I just share some thing about qemu source code with you. This post is mainly about qemu user mode and its ioctls realization.</p>
+<p>So for the qemu user mode, the point that we start with is <b><i>/linux-user/main.c</i></b>. The story starts at the main function here. There are two function calls here that I want to mention.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">syscall_init();</span><br><span class="line"></span><br><span class="line">cpu_loop(env);</span><br></pre></td></tr></table></figure>
+<p>For the syscall_init(), we can find it in the <b><i>/linux-user/syscall.c</i></b> . In this function, we can find this piece of code.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> STRUCT(name, ...) thunk_register_struct(STRUCT_ ## name, #name, struct_ ## name ## _def);</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> STRUCT_SPECIAL(name) thunk_register_struct_direct(STRUCT_ ## name, #name, &amp;struct_ ## name ## _def);</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"syscall_types.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> STRUCT</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> STRUCT_SPECIAL</span></span><br></pre></td></tr></table></figure>
+<p>So here it translates the STRUCT() in the syscall_types to a function. Basically what this function does is put the structs into some kind of struct_entries. We can also see that there is a while loop that calculates all the ie-target_cmd. This is used when there are syscalls from user land and qemu just passes it to the kernel.</p>
+<p>For the cpuloop(), since we are on the aarch64 phone we can find it in the <b><i> /linux-user/aarch64/cpuloop.c</i></b>.  So in this function we have a infinite for loop. And the key here is that switch().</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> (trapnr)</span><br><span class="line"></span><br><span class="line">Most of the time, we go into <span class="keyword">this</span> <span class="keyword">case</span>.</span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> EXCP_SWI:</span><br><span class="line">    ret = do_syscall(env,</span><br><span class="line">                        env-&gt;xregs[<span class="number">8</span>],</span><br><span class="line">                        env-&gt;xregs[<span class="number">0</span>],</span><br><span class="line">                        env-&gt;xregs[<span class="number">1</span>],</span><br><span class="line">                        env-&gt;xregs[<span class="number">2</span>],</span><br><span class="line">                        env-&gt;xregs[<span class="number">3</span>],</span><br><span class="line">                        env-&gt;xregs[<span class="number">4</span>],</span><br><span class="line">                        env-&gt;xregs[<span class="number">5</span>],</span><br><span class="line">                        <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (ret == -TARGET_ERESTARTSYS) &#123;</span><br><span class="line">        env-&gt;pc -= <span class="number">4</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ret != -TARGET_QEMU_ESIGRETURN) &#123;</span><br><span class="line">        env-&gt;xregs[<span class="number">0</span>] = ret;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>We see here the do_syscall takes in the register values. So this function is in the syscall.c And in the do_syscall we can still find a switch.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span>(num)</span><br></pre></td></tr></table></figure>
+<p>Since I want to talk about ioctl, it’s in this case.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> TARGET_NR_ioctl:</span><br><span class="line">    ret = do_ioctl(arg1, arg2, arg3);</span><br><span class="line">    <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+<p>And in the do_ioctl function, we can find that it actually do that ioctl using safe_ioctl. So we know that qemu here uses this method to implement those ioctls it regards as safe. So in order to let the qemu think one ioctl is safe, we have to add the new ioctl in these three files: syscall_defs.h syscall_types.h ioctls.h. Take a look at this patch, you will know everything.</p>
+<p><a href="https://lists.gnu.org/archive/html/qemu-devel/2017-10/msg00873.html" target="_blank" rel="noopener">https://lists.gnu.org/archive/html/qemu-devel/2017-10/msg00873.html</a></p>
+<p>Now you can add your personal ioctls that qemu is not supporting.</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/2018/">2018</a>
+		  
+			<a href="/tags/Qemu/">Qemu</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/06/03/Android-exploitation-kernel-out-of-array-index/">
+        <span class="next-text nav-default">Android exploitation: kernel out of array index</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2018
+    <span class="footer-author">Xudong.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

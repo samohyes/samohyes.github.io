@@ -59,7 +59,14 @@
 
     <url>
         <loc>http://samohyes.github.io/tags/2018/</loc>
-        <lastmod>2018-06-04T00:46:37.629Z</lastmod>
+        <lastmod>2018-07-04T14:47:55.582Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://samohyes.github.io/tags/Qemu/</loc>
+        <lastmod>2018-07-04T14:47:55.582Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
