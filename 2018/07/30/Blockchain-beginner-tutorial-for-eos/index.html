@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="Blockchain: beginner tutorial for eos"/>
+
+
+
+
+  <meta name="keywords" content="2018,Block chain,eos," />
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Xudong">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/1.jpg?v=1.1" />
+
+
+
+<link rel="canonical" href="http://samohyes.github.io/2018/07/30/Blockchain-beginner-tutorial-for-eos/"/>
+
+
+<meta name="description" content="So we want to run nodeos first. But you will have to start it with this long command. 1./build/programs/nodeos/nodeos -e -p eosio --plugin eosio::chain_api_plug">
+<meta name="keywords" content="2018,Block chain,eos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Blockchain: beginner tutorial for eos">
+<meta property="og:url" content="http://samohyes.github.io/2018/07/30/Blockchain-beginner-tutorial-for-eos/index.html">
+<meta property="og:site_name" content="Xudong">
+<meta property="og:description" content="So we want to run nodeos first. But you will have to start it with this long command. 1./build/programs/nodeos/nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin  I">
+<meta property="og:updated_time" content="2018-07-30T02:24:45.252Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Blockchain: beginner tutorial for eos">
+<meta name="twitter:description" content="So we want to run nodeos first. But you will have to start it with this long command. 1./build/programs/nodeos/nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin  I">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Blockchain: beginner tutorial for eos - Xudong </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Xudong</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Blockchain: beginner tutorial for eos
+        
+      </h1>
+
+      <time class="post-time">
+          Jul 30 2018
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>So we want to run nodeos first. But you will have to start it with this long command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./build/programs/nodeos/nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin </span><br></pre></td></tr></table></figure>
+<p>In order to make it easier. Change these lines in the ~/.local/share/eosio/nodeos/config/config.ini</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">enable</span>-stale-production = <span class="literal">true</span></span><br><span class="line">producer-name = eosio</span><br><span class="line">plugin = eosio::producer_plugin</span><br><span class="line">plugin = eosio::chain_api_plugin</span><br><span class="line">plugin = eosio::history_plugin</span><br><span class="line">plugin = eosio::history_api_plugin</span><br><span class="line">plugin = eosio::wallet_plugin</span><br><span class="line">plugin = eosio::wallet_api_plugin</span><br><span class="line">plugin = eosio::net_plugin</span><br><span class="line">plugin = eosio::net_api_plugin</span><br><span class="line">plugin = eosio::chain_plugin</span><br></pre></td></tr></table></figure>
+<p>By the way, to make your life easier just go to the build library and do sudo make install. And also add this to .bashrc</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/<span class="built_in">local</span>/eosio/bin/</span><br></pre></td></tr></table></figure>
+<p>Let’s create a wallet named “samtre”.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sam@man:~/Documents/eos$ ./build/programs/cleos/cleos wallet create</span><br><span class="line">Creating wallet: default</span><br><span class="line">Save password to use <span class="keyword">in</span> the future to unlock this wallet.</span><br><span class="line">Without password imported keys will not be retrievable.</span><br><span class="line"><span class="string">"PW5K7nrm3VL4RrEWzqeeF77ESBYsCZsJVE7Fh4niVgsNVtcF8A9yK"</span></span><br><span class="line"></span><br><span class="line">sam@man:~/Documents/eos$ ./build/programs/cleos/cleos wallet create -n samtre</span><br><span class="line">Creating wallet: samtre</span><br><span class="line">Save password to use <span class="keyword">in</span> the future to unlock this wallet.</span><br><span class="line">Without password imported keys will not be retrievable.</span><br><span class="line"><span class="string">"PW5KchrZ2bytr7QiAiNccDxqZetuxLDsei9854uRFhd9QEChKotJx"</span></span><br></pre></td></tr></table></figure>
+<p>And make sure that your wallet is unlocked. Import the key in config.ini.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sam@man:~/Documents/eos$ ./build/programs/cleos/cleos wallet import</span><br><span class="line">private key: imported private key <span class="keyword">for</span>: EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV</span><br></pre></td></tr></table></figure>
+<p>And then you are able to create an account named “samtre”.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sam@man:~/Documents/eos$ ./build/programs/cleos/cleos create account eosio samtre EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV</span><br><span class="line">executed transaction: 55e93b0796d61080256c7f689ac084f98ce7f0db7aeb8ba38cd7678d4f491406  200 bytes  1631 us</span><br><span class="line"><span class="comment">#         eosio &lt;= eosio::newaccount            &#123;"creator":"eosio","name":"samtre","owner":&#123;"threshold":1,"keys":[&#123;"key":"EOS6MRyAjQq8ud7hVNYcfnVPJq...</span></span><br><span class="line">2018-07-29T12:38:44.198 thread-0   main.cpp:391                  print_result   warning: transaction executed locally, but may not be confirmed by the network yet</span><br></pre></td></tr></table></figure>
+<p>OK, now let’s create another account “samhero” and “eosio.token”so we can try to create tokens and transfer between these accounts. For “eosio.token”, we don’t need an wallet for it.</p>
+<p>Now use the eosio.token to load the eosio.token contract.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sam@hero:~/Documents/eos$ cleos <span class="built_in">set</span> contract eosio.token contracts/eosio.token -p eosio.token</span><br><span class="line">Reading WAST/WASM from contracts/eosio.token/eosio.token.wasm...</span><br><span class="line">Using already assembled WASM...</span><br><span class="line">Publishing contract...</span><br><span class="line">executed transaction: 6fb1e0289669afd05c208db72f2203bc9da694025316c061048cf87d0d18c990  8112 bytes  3150 us</span><br><span class="line"><span class="comment">#         eosio &lt;= eosio::setcode               &#123;"account":"eosio.token","vmtype":0,"vmversion":0,"code":"0061736d01000000017e1560037f7e7f0060057f7e...</span></span><br><span class="line"><span class="comment">#         eosio &lt;= eosio::setabi                &#123;"account":"eosio.token","abi":"0e656f73696f3a3a6162692f312e30010c6163636f756e745f6e616d65046e616d65...</span></span><br><span class="line">2018-07-30T01:51:32.271 thread-0   main.cpp:391                  print_result   warning: transaction executed locally, but may not be confirmed by the network yet</span><br></pre></td></tr></table></figure>
+<p>And let’s create a token named XDS !</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sam@hero:~/Documents/eos$ cleos push action eosio.token create <span class="string">'&#123;"issuer":"eosio","maximum_supply":"1000 XDS"&#125;'</span> -p eosio.token</span><br><span class="line">executed transaction: 7d01b01caee8cc0055898cc412fa26ad490d0d05856602dc0a64fe7150f5c67a  120 bytes  834 us</span><br><span class="line"><span class="comment">#   eosio.token &lt;= eosio.token::create          &#123;"issuer":"eosio","maximum_supply":"1000 XDS"&#125;</span></span><br><span class="line">2018-07-30T01:57:01.971 thread-0   main.cpp:391                  print_result   warning: transaction executed locally, but may not be confirmed by the network yet</span><br></pre></td></tr></table></figure>
+<p>After this, let’s give samhero 100 XDS !</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">sam@hero:~/Documents/eos$ cleos push action eosio.token issue <span class="string">'["samhero", "100 XDS", "memo"]'</span> -p eosio</span><br><span class="line">executed transaction: 918e6a23e2668b5061da3aaa5916c511ab75eb4656f18c0be77e7e61b7a1cb2a  128 bytes  2291 us</span><br><span class="line"><span class="comment">#   eosio.token &lt;= eosio.token::issue           &#123;"to":"samhero","quantity":"100 XDS","memo":"memo"&#125;</span></span><br><span class="line"><span class="comment">#   eosio.token &lt;= eosio.token::transfer        &#123;"from":"eosio","to":"samhero","quantity":"100 XDS","memo":"memo"&#125;</span></span><br><span class="line"><span class="comment">#         eosio &lt;= eosio.token::transfer        &#123;"from":"eosio","to":"samhero","quantity":"100 XDS","memo":"memo"&#125;</span></span><br><span class="line"><span class="comment">#       samhero &lt;= eosio.token::transfer        &#123;"from":"eosio","to":"samhero","quantity":"100 XDS","memo":"memo"&#125;</span></span><br><span class="line">2018-07-30T01:58:57.363 thread-0   main.cpp:391                  print_result   warning: transaction executed locally, but may not be confirmed by the network yet</span><br><span class="line"></span><br><span class="line">Than we transfer 66 XDS from samhero to samtre.</span><br><span class="line"></span><br><span class="line">sam@hero:~/Documents/eos$ cleos push action eosio.token transfer <span class="string">'["samhero","samtre", "66 XDS","m"]'</span> -p samhero</span><br><span class="line">executed transaction: 7422eeed2fc3af418f63d30c6cb9b828f81f23a3ebb35af0babc5ad1297d3c3b  128 bytes  1233 us</span><br><span class="line"><span class="comment">#   eosio.token &lt;= eosio.token::transfer        &#123;"from":"samhero","to":"samtre","quantity":"66 XDS","memo":"m"&#125;</span></span><br><span class="line"><span class="comment">#       samhero &lt;= eosio.token::transfer        &#123;"from":"samhero","to":"samtre","quantity":"66 XDS","memo":"m"&#125;</span></span><br><span class="line"><span class="comment">#        samtre &lt;= eosio.token::transfer        &#123;"from":"samhero","to":"samtre","quantity":"66 XDS","memo":"m"&#125;</span></span><br><span class="line">2018-07-30T02:01:27.930 thread-0   main.cpp:391                  print_result   warning: transaction executed locally, but may not be confirmed by the network yet</span><br></pre></td></tr></table></figure>
+<p>See how many tokens they’ve got!</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sam@hero:~/Documents/eos$ cleos get currency balance eosio.token samhero</span><br><span class="line">34 XDS</span><br><span class="line">sam@hero:~/Documents/eos$ cleos get currency balance eosio.token samtre</span><br><span class="line">66 XDS</span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/2018/">2018</a>
+		  
+			<a href="/tags/Block-chain/">Block chain</a>
+		  
+			<a href="/tags/eos/">eos</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/07/04/Qemu-source-user-mode-initialization-and-ioctls/">
+        <span class="next-text nav-default">Qemu source: user mode initialization and ioctls</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2018
+    <span class="footer-author">Xudong.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
