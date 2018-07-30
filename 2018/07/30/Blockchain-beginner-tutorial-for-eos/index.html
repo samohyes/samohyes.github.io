@@ -35,17 +35,17 @@
 <link rel="canonical" href="http://samohyes.github.io/2018/07/30/Blockchain-beginner-tutorial-for-eos/"/>
 
 
-<meta name="description" content="So we want to run nodeos first. But you will have to start it with this long command. 1./build/programs/nodeos/nodeos -e -p eosio --plugin eosio::chain_api_plug">
+<meta name="description" content="Well, eos is quite hot these days and someone says it will be the third generation of blockchain. We will see. But now, I want to write a post for those who wan">
 <meta name="keywords" content="2018,Block chain,eos">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Blockchain: beginner tutorial for eos">
 <meta property="og:url" content="http://samohyes.github.io/2018/07/30/Blockchain-beginner-tutorial-for-eos/index.html">
 <meta property="og:site_name" content="Xudong">
-<meta property="og:description" content="So we want to run nodeos first. But you will have to start it with this long command. 1./build/programs/nodeos/nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin  I">
-<meta property="og:updated_time" content="2018-07-30T02:24:45.252Z">
+<meta property="og:description" content="Well, eos is quite hot these days and someone says it will be the third generation of blockchain. We will see. But now, I want to write a post for those who want to get into the eos. So we want to run">
+<meta property="og:updated_time" content="2018-07-30T02:28:49.820Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Blockchain: beginner tutorial for eos">
-<meta name="twitter:description" content="So we want to run nodeos first. But you will have to start it with this long command. 1./build/programs/nodeos/nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin  I">
+<meta name="twitter:description" content="Well, eos is quite hot these days and someone says it will be the third generation of blockchain. We will see. But now, I want to write a post for those who want to get into the eos. So we want to run">
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
@@ -130,7 +130,8 @@
 
     
             <div class="post-content">
-            <p>So we want to run nodeos first. But you will have to start it with this long command.</p>
+            <p>Well, eos is quite hot these days and someone says it will be the third generation of blockchain. We will see. But now, I want to write a post for those who want to get into the eos.</p>
+<p>So we want to run nodeos first. But you will have to start it with this long command.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./build/programs/nodeos/nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin </span><br></pre></td></tr></table></figure>
 <p>In order to make it easier. Change these lines in the ~/.local/share/eosio/nodeos/config/config.ini</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">enable</span>-stale-production = <span class="literal">true</span></span><br><span class="line">producer-name = eosio</span><br><span class="line">plugin = eosio::producer_plugin</span><br><span class="line">plugin = eosio::chain_api_plugin</span><br><span class="line">plugin = eosio::history_plugin</span><br><span class="line">plugin = eosio::history_api_plugin</span><br><span class="line">plugin = eosio::wallet_plugin</span><br><span class="line">plugin = eosio::wallet_api_plugin</span><br><span class="line">plugin = eosio::net_plugin</span><br><span class="line">plugin = eosio::net_api_plugin</span><br><span class="line">plugin = eosio::chain_plugin</span><br></pre></td></tr></table></figure>
@@ -175,7 +176,7 @@
     
       <a class="next" href="/2018/07/04/Qemu-source-user-mode-initialization-and-ioctls/">
         <span class="next-text nav-default">Qemu source: user mode initialization and ioctls</span>
-        <span class="prev-text nav-mobile">Next</span>
+        <span class="prev-text nav-mobile">下一篇</span>
         <i class="iconfont icon-right"></i>
       </a>
     
@@ -204,7 +205,7 @@
     2018
     <span class="footer-author">Xudong.</span>
     <span class="power-by">
-        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+        由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a> 强力驱动
     </span>
 </span>
 
