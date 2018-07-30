@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="Blockchain: Inline action for eos"/>
+
+
+
+
+  <meta name="keywords" content="2018,Block chain,eos," />
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Xudong">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/1.jpg?v=1.1" />
+
+
+
+<link rel="canonical" href="http://samohyes.github.io/2018/07/30/Blockchain-Inline-action-for-eos/"/>
+
+
+<meta name="description" content="In this post, I will talk about inline action. Before I start, I have to mention that I referred to this post a lot. https://blog.csdn.net/itleaks/article/detai">
+<meta name="keywords" content="2018,Block chain,eos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Blockchain: Inline action for eos">
+<meta property="og:url" content="http://samohyes.github.io/2018/07/30/Blockchain-Inline-action-for-eos/index.html">
+<meta property="og:site_name" content="Xudong">
+<meta property="og:description" content="In this post, I will talk about inline action. Before I start, I have to mention that I referred to this post a lot. https://blog.csdn.net/itleaks/article/details/80535318 So what we want here is that">
+<meta property="og:updated_time" content="2018-07-30T08:28:29.385Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Blockchain: Inline action for eos">
+<meta name="twitter:description" content="In this post, I will talk about inline action. Before I start, I have to mention that I referred to this post a lot. https://blog.csdn.net/itleaks/article/details/80535318 So what we want here is that">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Blockchain: Inline action for eos - Xudong </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Xudong</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Blockchain: Inline action for eos
+        
+      </h1>
+
+      <time class="post-time">
+          Jul 30 2018
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>In this post, I will talk about inline action. Before I start, I have to mention that I referred to this post a lot.</p>
+<p><a href="https://blog.csdn.net/itleaks/article/details/80535318" target="_blank" rel="noopener">https://blog.csdn.net/itleaks/article/details/80535318</a></p>
+<p>So what we want here is that we want to call the contract on another account. Here we have two accounts “samhero” and “samtre”. And we load code contract on samhero and target contract on samtre. We will call the function in samtre from samhero.</p>
+<p>Let’s start coding!</p>
+<p>In the code.cpp we have:</p>
+<figure class="highlight c"><figcaption><span>++</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;eosiolib/eosio.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;eosiolib/print.hpp&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> eosio;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">hello</span> :</span> <span class="keyword">public</span> eosio::contract&#123;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		<span class="keyword">using</span> contract::contract;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/// @abi action</span></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">hi</span><span class="params">( account_name from, account_name to )</span></span>&#123;</span><br><span class="line">		require_auth(from);</span><br><span class="line">		print(<span class="string">"hello, from:"</span>,name&#123;from&#125;,<span class="string">", to: "</span>,name&#123;to&#125;);</span><br><span class="line">		action(</span><br><span class="line">			permission_level&#123;to, N(active)&#125;,</span><br><span class="line">			N(samtre),N(callme),</span><br><span class="line">			<span class="built_in">std</span>::make_tuple(to)</span><br><span class="line">		).send();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">EOSIO_ABI(hello, (hi))</span><br></pre></td></tr></table></figure>
+<p>Here the action() is the key that we call the function in samtre.</p>
+<p>In the target.cpp we have:</p>
+<figure class="highlight c"><figcaption><span>++</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;eosiolib/eosio.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;eosiolib/print.hpp&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> eosio;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">target</span> :</span> <span class="keyword">public</span> eosio::contract&#123;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		<span class="keyword">using</span> contract::contract;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/// @abi action</span></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">callme</span><span class="params">( account_name user )</span></span>&#123;</span><br><span class="line">		require_auth(user);</span><br><span class="line">		print( <span class="string">"Call me from, "</span>, name&#123;user&#125; );</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">EOSIO_ABI(target, (callme))</span><br></pre></td></tr></table></figure>
+<p>So here are the commands that we are going to type.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sam@hero:~/Documents/eos/contracts$ cleos <span class="built_in">set</span> contract samhero code/ -p samhero</span><br><span class="line">sam@hero:~/Documents/eos/contracts$ cleos <span class="built_in">set</span> contract samtre target/ -p samtre</span><br><span class="line">sam@hero:~/Documents/eos/contracts$ cleos <span class="built_in">set</span> account permission samtre active <span class="string">'&#123;"threshold": 1,"keys": [],"accounts": [&#123;"permission":&#123;"actor":"samhero","permission":"eosio.code"&#125;,"weight":1&#125;]&#125;'</span> owner -p samtre@owner</span><br><span class="line"></span><br><span class="line">sam@hero:~/Documents/eos/contracts$ cleos push action samhero hi <span class="string">'["samhero","samtre"]'</span> -p samhero</span><br><span class="line">executed transaction: 858fd8523d7c0c746d432146a1eb5aafaf5b0dd830257a642a5609645efe9528  112 bytes  1270 us</span><br><span class="line"><span class="comment">#       samhero &lt;= samhero::hi                  &#123;"from":"samhero","to":"samtre"&#125;</span></span><br><span class="line">&gt;&gt; hello, from:samhero, to: samtre</span><br><span class="line"><span class="comment">#        samtre &lt;= samtre::callme               &#123;"user":"samtre"&#125;</span></span><br><span class="line">&gt;&gt; Call me from, samtre</span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/2018/">2018</a>
+		  
+			<a href="/tags/Block-chain/">Block chain</a>
+		  
+			<a href="/tags/eos/">eos</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/07/30/Blockchain-hello-world-for-eos/">
+        <span class="next-text nav-default">Blockchain: hello world for eos</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2018
+    <span class="footer-author">Xudong.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
