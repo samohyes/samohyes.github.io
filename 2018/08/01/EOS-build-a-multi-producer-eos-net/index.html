@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="EOS: build a multi producer eos net"/>
+
+
+
+
+  <meta name="keywords" content="2018,Block chain,eos," />
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Xudong">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/1.jpg?v=1.1" />
+
+
+
+<link rel="canonical" href="http://samohyes.github.io/2018/08/01/EOS-build-a-multi-producer-eos-net/"/>
+
+
+<meta name="description" content="So most of the time, we are running a private eos network on our own machine. And there is only one producer if we just run nodeos. We all know that eos has 21 ">
+<meta name="keywords" content="2018,Block chain,eos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EOS: build a multi producer eos net">
+<meta property="og:url" content="http://samohyes.github.io/2018/08/01/EOS-build-a-multi-producer-eos-net/index.html">
+<meta property="og:site_name" content="Xudong">
+<meta property="og:description" content="So most of the time, we are running a private eos network on our own machine. And there is only one producer if we just run nodeos. We all know that eos has 21 producers. In this post, I will talk abo">
+<meta property="og:updated_time" content="2018-08-01T04:36:39.363Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="EOS: build a multi producer eos net">
+<meta name="twitter:description" content="So most of the time, we are running a private eos network on our own machine. And there is only one producer if we just run nodeos. We all know that eos has 21 producers. In this post, I will talk abo">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> EOS: build a multi producer eos net - Xudong </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Xudong</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          EOS: build a multi producer eos net
+        
+      </h1>
+
+      <time class="post-time">
+          Aug 01 2018
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>So most of the time, we are running a private eos network on our own machine. And there is only one producer if we just run nodeos. We all know that eos has 21 producers. In this post, I will talk about how to run several producers on your own private network.</p>
+<p>Before I start, I have to mention that I refer to this post a lot.</p>
+<p><a href="https://bihu.com/article/206780" target="_blank" rel="noopener">https://bihu.com/article/206780</a></p>
+<p>The idea is that we run different nodes on different ports.</p>
+<p>First, we run nodeos as usual. And the producer here is that eosio.</p>
+<p>And then we will run the second node. The producer for this one is samtre. So the command here is</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nodeos -p samtre --plugin eosio::chain_api_plugin --plugin eosio::net_api_plugin --http-server-address 127.0.0.1:8889 --p2p-listen-endpoint 127.0.0.1:9877 --p2p-peer-address 127.0.0.1:9876 --config-dir node2 --data-dir node2 --private-key [\<span class="string">"EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV\",\"5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3\"]</span></span><br></pre></td></tr></table></figure>
+<p>Here, the server address is set to port 8889 since the first one is on 8888. And the p2p listen port is 9877 while the original one is 9876. And the config file and block data are put under the node2 dir.</p>
+<p>When the second node starts running, we can find it starts to receive blocks.</p>
+<p>And you can use this command to get the node info.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">sam@hero:~$ cleos --wallet-url http://localhost:8888 get info</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"server_version"</span>: <span class="string">"75635168"</span>,</span><br><span class="line">  <span class="string">"chain_id"</span>: <span class="string">"cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"</span>,</span><br><span class="line">  <span class="string">"head_block_num"</span>: 23188,</span><br><span class="line">  <span class="string">"last_irreversible_block_num"</span>: 23187,</span><br><span class="line">  <span class="string">"last_irreversible_block_id"</span>: <span class="string">"00005a930c4ee6743045ee82ad15f69e4a5ee44160fef50acb5305bd17b8d119"</span>,</span><br><span class="line">  <span class="string">"head_block_id"</span>: <span class="string">"00005a948f9d2567d4fff114675e8a56bbffcb5cbeb8a1939b5df37369648642"</span>,</span><br><span class="line">  <span class="string">"head_block_time"</span>: <span class="string">"2018-08-01T03:25:50.500"</span>,</span><br><span class="line">  <span class="string">"head_block_producer"</span>: <span class="string">"eosio"</span>,</span><br><span class="line">  <span class="string">"virtual_block_cpu_limit"</span>: 200000000,</span><br><span class="line">  <span class="string">"virtual_block_net_limit"</span>: 1048576000,</span><br><span class="line">  <span class="string">"block_cpu_limit"</span>: 199900,</span><br><span class="line">  <span class="string">"block_net_limit"</span>: 1048576</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>For samtre, it’s on the 8889 port so you need to change that port.</p>
+<p>Finally you can change the producer with this command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sam@hero:~$ cleos push action eosio setprods <span class="string">'&#123;"schedule":[&#123;"producer_name":"samtre","block_signing_key":"EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"&#125;]&#125;'</span> -p eosio</span><br><span class="line">executed transaction: 6c2931277377c8ffb4f05ada4b2aab8e0b80f8a68321a3eb06c4bd2fcfa3f7a3  136 bytes  683 us</span><br><span class="line"><span class="comment">#         eosio &lt;= eosio::setprods              &#123;"schedule":[&#123;"producer_name":"samtre","block_signing_key":"EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtH...</span></span><br></pre></td></tr></table></figure>
+<p>You will find now that samtre is starting to produce blocks!</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/2018/">2018</a>
+		  
+			<a href="/tags/Block-chain/">Block chain</a>
+		  
+			<a href="/tags/eos/">eos</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/07/30/Blockchain-Inline-action-for-eos/">
+        <span class="next-text nav-default">EOS: Inline action </span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2018
+    <span class="footer-author">Xudong.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
