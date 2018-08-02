@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="Ethereum: notes on diving into EVM"/>
+
+
+
+
+  <meta name="keywords" content="2018,Block chain,Ethereum," />
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Xudong">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/1.jpg?v=1.1" />
+
+
+
+<link rel="canonical" href="http://samohyes.github.io/2018/08/02/Ethereum-notes-on-diving-into-EVM/"/>
+
+
+<meta name="description" content="Before we start, I have to mention that I refer to this post a lot.https://blog.qtum.org/diving-into-the-ethereum-vm-6e8d5d2f3c30 For ethereum vm, the storage a">
+<meta name="keywords" content="2018,Block chain,Ethereum">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ethereum: notes on diving into EVM">
+<meta property="og:url" content="http://samohyes.github.io/2018/08/02/Ethereum-notes-on-diving-into-EVM/index.html">
+<meta property="og:site_name" content="Xudong">
+<meta property="og:description" content="Before we start, I have to mention that I refer to this post a lot.https://blog.qtum.org/diving-into-the-ethereum-vm-6e8d5d2f3c30 For ethereum vm, the storage access is expensive. sstore costs 20000 g">
+<meta property="og:updated_time" content="2018-08-02T06:43:39.815Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ethereum: notes on diving into EVM">
+<meta name="twitter:description" content="Before we start, I have to mention that I refer to this post a lot.https://blog.qtum.org/diving-into-the-ethereum-vm-6e8d5d2f3c30 For ethereum vm, the storage access is expensive. sstore costs 20000 g">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Ethereum: notes on diving into EVM - Xudong </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Xudong</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Ethereum: notes on diving into EVM
+        
+      </h1>
+
+      <time class="post-time">
+          Aug 02 2018
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>Before we start, I have to mention that I refer to this post a lot.<br><a href="https://blog.qtum.org/diving-into-the-ethereum-vm-6e8d5d2f3c30" target="_blank" rel="noopener">https://blog.qtum.org/diving-into-the-ethereum-vm-6e8d5d2f3c30</a></p>
+<p>For ethereum vm, the storage access is expensive. sstore costs 20000 gas and sload costs 200 gas. So we have to learn to optimize the code to save real money here.</p>
+<ul>
+<li>We don’t pay for variable declaration</li>
+</ul>
+<p>I got this code here.</p>
+<p>sam@hero:~/Documents/test$ cat c1.sol<br>pragma solidity ^0.4.11;<br>contract C {<br>    uint256 a;<br>    uint256 b;<br>    uint256 c;<br>    function C() {<br>      a = 7;<br>    }<br>}</p>
+<p>And let’s compile it. (solc –bin –asm –optimize c1.sol ) If we take a look at the output assembly code, we will see this.</p>
+<p>  0x7<br>  0x0<br>  sstore</p>
+<p>It only stores a. And that’s what we are going to pay.</p>
+<ul>
+<li>Read from an uninitialized position returns 0</li>
+</ul>
+<p>Let’s change our code here.</p>
+<p>sam@hero:~/Documents/test$ cat c1.sol<br>pragma solidity ^0.4.11;<br>contract C {<br>    uint256 a;<br>    uint256 b;<br>    uint256 c;<br>    function C() {<br>      a = a + 1;<br>    }<br>}</p>
+<p>Let’s compile it.</p>
+<p>  pop<br>  0x0<br>  dup1<br>  sload<br>  0x1<br>  add<br>  swap1<br>  sstore</p>
+<p>So here we see that it’s wasting gas with sload.</p>
+<ul>
+<li>struct</li>
+</ul>
+<p>Let’s assign a value in a struct.</p>
+<p>sam@hero:~/Documents/test$ cat c1.sol<br>pragma solidity ^0.4.11;<br>contract C {<br>    struct Tuple{<br>      uint256 a;<br>      uint256 b;<br>    }</p>
+<pre><code>Tuple t;
+
+function C() {
+  t.b = 7;
+}
+</code></pre><p>}</p>
+<p>Compile it.<br>tag_1:<br>  pop<br>  0x7<br>  0x1<br>  sstore</p>
+<p>We see that we only pay for the uint256 b.</p>
+<ul>
+<li>Fixed length array<br>Our code here.</li>
+</ul>
+<p>sam@hero:~/Documents/test$ cat c1.sol<br>pragma solidity ^0.4.11;<br>contract C {<br>    uint256[6] numbers;</p>
+<pre><code>function C() {
+  numbers[5] = 7;
+}
+</code></pre><p>}</p>
+<p>Compile it.</p>
+<p>  pop<br>  0x7<br>  0x5<br>  sstore</p>
+<p>The same as above cases. But if we turn off the compile optimization, we can see the bound-checking code.</p>
+<p>  pop<br>  0x7<br>  0x0<br>  0x5<br>  0x6<br>  dup2<br>  lt<br>  iszero<br>  iszero<br>  tag_4<br>  jumpi<br>  invalid</p>
+<ul>
+<li><p>Store 4 8 bytes number in one 32 bytes slot<br>sam@hero:~/Documents/test$ cat c1.sol<br>pragma solidity ^0.4.11;<br>contract C {<br>  uint64 a;<br>  uint64 b;<br>  uint64 c;<br>  uint64 d;</p>
+<p>  function C() {</p>
+<pre><code>a = 1;
+b = 2;
+c = 3;
+d = 4;
+</code></pre><p>  }<br>}</p>
+</li>
+</ul>
+<p>Compile it with optimization.</p>
+<p>  0x0<br>  dup1<br>  sload<br>  0x1<br>  not(0xffffffffffffffff)<br>  swap1<br>  swap2<br>  and<br>  or<br>  not(sub(exp(0x2, 0x80), exp(0x2, 0x40)))<br>  and<br>  0x20000000000000000<br>  or<br>  not(sub(exp(0x2, 0xc0), exp(0x2, 0x80)))<br>  and<br>  0x300000000000000000000000000000000<br>  or<br>  sub(exp(0x2, 0xc0), 0x1)<br>  and<br>  0x4000000000000000000000000000000000000000000000000<br>  or<br>  dup2<br>  sstore</p>
+<p>See what? We only have one sstore here. </p>
+<ul>
+<li>Mapping</li>
+</ul>
+<p>Let’s try mapping in solidity here!</p>
+<p>sam@hero:~/Documents/test$ cat c1.sol<br>pragma solidity ^0.4.11;<br>contract C {<br>    mapping(uint256 =&gt; uint256) items;</p>
+<pre><code>function C() {
+  items[0xbeef] = 7;
+}
+</code></pre><p>}</p>
+<p>Compile it.</p>
+<p>  pop<br>  0xbeef<br>  0x0<br>  swap1<br>  dup2<br>  mstore<br>  0x20<br>  mstore<br>  0x7<br>  0xf795696b84ec505a06e455ed35745d482b1c95debff7502f2dfa10a8a8820138<br>  sstore</p>
+<p>We see that EVM doesn’t use 0xbeef we provided as the key. Instead it used a hash number. And that’s keccak256 result.</p>
+<p>So let’s make some changes and use much large values.</p>
+<p>pragma solidity ^0.4.11;<br>contract C {<br>    mapping(uint256 =&gt; Tuple) tuples;<br>    struct Tuple {<br>      uint256 a;<br>      uint256 b;<br>      uint256 c;<br>    }<br>    function C() {<br>      tuples[0x1].a = 0x1A;<br>      tuples[0x1].b = 0x1B;<br>      tuples[0x1].c = 0x1C;<br>    }<br>}</p>
+<p>So it uses 3 sstore now.</p>
+<p>  0x1a<br>  0xada5013122d395ba3c54772283fb069b10426056ef8ca54750cb9bb552a59e7d<br>  sstore<br>  0x1b<br>  0xada5013122d395ba3c54772283fb069b10426056ef8ca54750cb9bb552a59e7e<br>  sstore<br>  0x1c<br>  0xada5013122d395ba3c54772283fb069b10426056ef8ca54750cb9bb552a59e7f<br>  sstore</p>
+<ul>
+<li>Array<br>Array is just like mapping. Let’s consider a simple array here.</li>
+</ul>
+<p>pragma solidity ^0.4.11;<br>contract C {<br>    uint256[] chunks;<br>    function C() {<br>      chunks.push(0xAA);<br>      chunks.push(0xBB);<br>      chunks.push(0xCC);<br>    }<br>}</p>
+<p>The 4 storage slots are like this. while the first one is the length.</p>
+<p>key: 0x0000000000000000000000000000000000000000000000000000000000000000<br>value: 0x0000000000000000000000000000000000000000000000000000000000000003<br>key: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563<br>value: 0x00000000000000000000000000000000000000000000000000000000000000aa<br>key: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e564<br>value: 0x00000000000000000000000000000000000000000000000000000000000000bb<br>key: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e565<br>value: 0x00000000000000000000000000000000000000000000000000000000000000cc</p>
+<p>For a dynamic array.</p>
+<p>pragma solidity ^0.4.11;<br>contract C {<br>    uint128[] s;<br>    function C() {<br>        s.length = 4;<br>        s[0] = 0xAA;<br>        s[1] = 0xBB;<br>        s[2] = 0xCC;<br>        s[3] = 0xDD;<br>    }<br>}</p>
+<p>It will fit into 2 slots.</p>
+<p>key: 0x0000000000000000000000000000000000000000000000000000000000000000<br>value: 0x0000000000000000000000000000000000000000000000000000000000000004<br>key: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563<br>value: 0x000000000000000000000000000000bb000000000000000000000000000000aa<br>key: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e564<br>value: 0x000000000000000000000000000000dd000000000000000000000000000000cc</p>
+<ul>
+<li>How a function in smart contract gets called</li>
+</ul>
+<p>So for a function like this:</p>
+<p>pragma solidity ^0.4.11;<br>contract C {<br>  uint256 a;<br>  function setA(uint256 _a) {<br>    a = _a;<br>  }<br>  function getA() returns(uint256) {<br>    return a;<br>  }<br>}</p>
+<p>If you deploy it on the network, you will get a contract address.</p>
+<p>0x62650ae5c5777d1660cc17fcd4f48f6a66b9a4c2</p>
+<p>When you want to make a call to setA, you are actually making a transaction. The destination is </p>
+<p>0x62650ae5c5777d1660cc17fcd4f48f6a66b9a4c2</p>
+<p>And the input data in the transaction is </p>
+<p>0xee919d500000000000000000000000000000000000000000000000000000000000000001</p>
+<p>Here the first 4 bytes are method selector and the last one is the argument.</p>
+<p>And if you want to use getA(), you don’t need to pay since it won’t change anything. The input data should be</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>sha3(“getA()”)[0:8].hex()<br>‘d46300fd’</p>
+</blockquote>
+</blockquote>
+</blockquote>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/2018/">2018</a>
+		  
+			<a href="/tags/Block-chain/">Block chain</a>
+		  
+			<a href="/tags/Ethereum/">Ethereum</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/08/01/EOS-build-a-multi-producer-eos-net/">
+        <span class="next-text nav-default">EOS: build a multi producer eos net</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2018
+    <span class="footer-author">Xudong.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

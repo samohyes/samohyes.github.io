@@ -7,6 +7,14 @@
     </url>
 
     <url>
+        <loc>http://samohyes.github.io/2018/08/02/Ethereum-notes-on-diving-into-EVM/</loc>
+        <lastmod>2018-08-02T06:43:39.815Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://samohyes.github.io/2018/08/01/EOS-build-a-multi-producer-eos-net/</loc>
         <lastmod>2018-08-01T04:36:39.363Z</lastmod>
         <changefreq>weekly</changefreq>

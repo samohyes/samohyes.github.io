@@ -65,22 +65,29 @@
     </url>
 
     <url>
-        <loc>http://samohyes.github.io/tags/2018/</loc>
+        <loc>http://samohyes.github.io/tags/eos/</loc>
         <lastmod>2018-08-01T04:36:39.363Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://samohyes.github.io/tags/2018/</loc>
+        <lastmod>2018-08-02T06:43:39.815Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>http://samohyes.github.io/tags/Block-chain/</loc>
-        <lastmod>2018-08-01T04:36:39.363Z</lastmod>
+        <lastmod>2018-08-02T06:43:39.815Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://samohyes.github.io/tags/eos/</loc>
-        <lastmod>2018-08-01T04:36:39.363Z</lastmod>
+        <loc>http://samohyes.github.io/tags/Ethereum/</loc>
+        <lastmod>2018-08-02T06:43:39.815Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
