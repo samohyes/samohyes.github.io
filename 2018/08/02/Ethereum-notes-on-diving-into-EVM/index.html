@@ -42,7 +42,7 @@
 <meta property="og:url" content="http://samohyes.github.io/2018/08/02/Ethereum-notes-on-diving-into-EVM/index.html">
 <meta property="og:site_name" content="Xudong">
 <meta property="og:description" content="Before we start, I have to mention that I refer to this post a lot.https://blog.qtum.org/diving-into-the-ethereum-vm-6e8d5d2f3c30 For ethereum vm, the storage access is expensive. sstore costs 20000 g">
-<meta property="og:updated_time" content="2018-08-02T06:43:39.815Z">
+<meta property="og:updated_time" content="2018-08-02T06:50:44.827Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ethereum: notes on diving into EVM">
 <meta name="twitter:description" content="Before we start, I have to mention that I refer to this post a lot.https://blog.qtum.org/diving-into-the-ethereum-vm-6e8d5d2f3c30 For ethereum vm, the storage access is expensive. sstore costs 20000 g">
@@ -132,91 +132,56 @@
             <div class="post-content">
             <p>Before we start, I have to mention that I refer to this post a lot.<br><a href="https://blog.qtum.org/diving-into-the-ethereum-vm-6e8d5d2f3c30" target="_blank" rel="noopener">https://blog.qtum.org/diving-into-the-ethereum-vm-6e8d5d2f3c30</a></p>
 <p>For ethereum vm, the storage access is expensive. sstore costs 20000 gas and sload costs 200 gas. So we have to learn to optimize the code to save real money here.</p>
-<ul>
-<li>We don’t pay for variable declaration</li>
-</ul>
+<p><b> We don’t pay for variable declaration</b></p>
 <p>I got this code here.</p>
-<p>sam@hero:~/Documents/test$ cat c1.sol<br>pragma solidity ^0.4.11;<br>contract C {<br>    uint256 a;<br>    uint256 b;<br>    uint256 c;<br>    function C() {<br>      a = 7;<br>    }<br>}</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sam@hero:~/Documents/<span class="built_in">test</span>$ cat c1.sol </span><br><span class="line">pragma solidity ^0.4.11;</span><br><span class="line">contract C &#123;</span><br><span class="line">    uint256 a;</span><br><span class="line">    uint256 b;</span><br><span class="line">    uint256 c;</span><br><span class="line">    <span class="keyword">function</span> <span class="function"><span class="title">C</span></span>() &#123;</span><br><span class="line">      a = 7;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>And let’s compile it. (solc –bin –asm –optimize c1.sol ) If we take a look at the output assembly code, we will see this.</p>
-<p>  0x7<br>  0x0<br>  sstore</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0x7</span><br><span class="line">0x0</span><br><span class="line">sstore</span><br></pre></td></tr></table></figure>
 <p>It only stores a. And that’s what we are going to pay.</p>
-<ul>
-<li>Read from an uninitialized position returns 0</li>
-</ul>
+<p><b>Read from an uninitialized position returns 0</b></p>
 <p>Let’s change our code here.</p>
-<p>sam@hero:~/Documents/test$ cat c1.sol<br>pragma solidity ^0.4.11;<br>contract C {<br>    uint256 a;<br>    uint256 b;<br>    uint256 c;<br>    function C() {<br>      a = a + 1;<br>    }<br>}</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sam@hero:~/Documents/<span class="built_in">test</span>$ cat c1.sol </span><br><span class="line">pragma solidity ^0.4.11;</span><br><span class="line">contract C &#123;</span><br><span class="line">    uint256 a;</span><br><span class="line">    uint256 b;</span><br><span class="line">    uint256 c;</span><br><span class="line">    <span class="keyword">function</span> <span class="function"><span class="title">C</span></span>() &#123;</span><br><span class="line">      a = a + 1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Let’s compile it.</p>
-<p>  pop<br>  0x0<br>  dup1<br>  sload<br>  0x1<br>  add<br>  swap1<br>  sstore</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">pop</span><br><span class="line">0x0</span><br><span class="line">dup1</span><br><span class="line">sload</span><br><span class="line">0x1</span><br><span class="line">add</span><br><span class="line">swap1</span><br><span class="line">sstore</span><br></pre></td></tr></table></figure>
 <p>So here we see that it’s wasting gas with sload.</p>
-<ul>
-<li>struct</li>
-</ul>
+<p><b>struct</b></p>
 <p>Let’s assign a value in a struct.</p>
-<p>sam@hero:~/Documents/test$ cat c1.sol<br>pragma solidity ^0.4.11;<br>contract C {<br>    struct Tuple{<br>      uint256 a;<br>      uint256 b;<br>    }</p>
-<pre><code>Tuple t;
-
-function C() {
-  t.b = 7;
-}
-</code></pre><p>}</p>
-<p>Compile it.<br>tag_1:<br>  pop<br>  0x7<br>  0x1<br>  sstore</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">sam@hero:~/Documents/<span class="built_in">test</span>$ cat c1.sol </span><br><span class="line">pragma solidity ^0.4.11;</span><br><span class="line">contract C &#123;</span><br><span class="line">    struct Tuple&#123;</span><br><span class="line">      uint256 a;</span><br><span class="line">      uint256 b;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Tuple t;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="function"><span class="title">C</span></span>() &#123;</span><br><span class="line">      t.b = 7;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Compile it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tag_1:</span><br><span class="line">  pop</span><br><span class="line">  0x7</span><br><span class="line">  0x1</span><br><span class="line">  sstore</span><br></pre></td></tr></table></figure>
 <p>We see that we only pay for the uint256 b.</p>
-<ul>
-<li>Fixed length array<br>Our code here.</li>
-</ul>
-<p>sam@hero:~/Documents/test$ cat c1.sol<br>pragma solidity ^0.4.11;<br>contract C {<br>    uint256[6] numbers;</p>
-<pre><code>function C() {
-  numbers[5] = 7;
-}
-</code></pre><p>}</p>
+<p><b>Fixed length array</b><br>Our code here.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sam@hero:~/Documents/<span class="built_in">test</span>$ cat c1.sol </span><br><span class="line">pragma solidity ^0.4.11;</span><br><span class="line">contract C &#123;</span><br><span class="line">    uint256[6] numbers;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="function"><span class="title">C</span></span>() &#123;</span><br><span class="line">      numbers[5] = 7;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Compile it.</p>
-<p>  pop<br>  0x7<br>  0x5<br>  sstore</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pop</span><br><span class="line">0x7</span><br><span class="line">0x5</span><br><span class="line">sstore</span><br></pre></td></tr></table></figure>
 <p>The same as above cases. But if we turn off the compile optimization, we can see the bound-checking code.</p>
-<p>  pop<br>  0x7<br>  0x0<br>  0x5<br>  0x6<br>  dup2<br>  lt<br>  iszero<br>  iszero<br>  tag_4<br>  jumpi<br>  invalid</p>
-<ul>
-<li><p>Store 4 8 bytes number in one 32 bytes slot<br>sam@hero:~/Documents/test$ cat c1.sol<br>pragma solidity ^0.4.11;<br>contract C {<br>  uint64 a;<br>  uint64 b;<br>  uint64 c;<br>  uint64 d;</p>
-<p>  function C() {</p>
-<pre><code>a = 1;
-b = 2;
-c = 3;
-d = 4;
-</code></pre><p>  }<br>}</p>
-</li>
-</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">pop</span><br><span class="line">0x7</span><br><span class="line">0x0</span><br><span class="line">0x5</span><br><span class="line">0x6</span><br><span class="line">dup2</span><br><span class="line">lt</span><br><span class="line">iszero</span><br><span class="line">iszero</span><br><span class="line">tag_4</span><br><span class="line">jumpi</span><br><span class="line">invalid</span><br></pre></td></tr></table></figure>
+<p><b>Store 4 8 bytes number in one 32 bytes slot</b></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">sam@hero:~/Documents/<span class="built_in">test</span>$ cat c1.sol </span><br><span class="line">pragma solidity ^0.4.11;</span><br><span class="line">contract C &#123;</span><br><span class="line">    uint64 a;</span><br><span class="line">    uint64 b;</span><br><span class="line">    uint64 c;</span><br><span class="line">    uint64 d;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="function"><span class="title">C</span></span>() &#123;</span><br><span class="line">      a = 1;</span><br><span class="line">      b = 2;</span><br><span class="line">      c = 3;</span><br><span class="line">      d = 4;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Compile it with optimization.</p>
-<p>  0x0<br>  dup1<br>  sload<br>  0x1<br>  not(0xffffffffffffffff)<br>  swap1<br>  swap2<br>  and<br>  or<br>  not(sub(exp(0x2, 0x80), exp(0x2, 0x40)))<br>  and<br>  0x20000000000000000<br>  or<br>  not(sub(exp(0x2, 0xc0), exp(0x2, 0x80)))<br>  and<br>  0x300000000000000000000000000000000<br>  or<br>  sub(exp(0x2, 0xc0), 0x1)<br>  and<br>  0x4000000000000000000000000000000000000000000000000<br>  or<br>  dup2<br>  sstore</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">0x0</span><br><span class="line">dup1</span><br><span class="line">sload</span><br><span class="line">0x1</span><br><span class="line">not(0xffffffffffffffff)</span><br><span class="line">swap1</span><br><span class="line">swap2</span><br><span class="line">and</span><br><span class="line">or</span><br><span class="line">not(sub(exp(0x2, 0x80), exp(0x2, 0x40)))</span><br><span class="line">and</span><br><span class="line">0x20000000000000000</span><br><span class="line">or</span><br><span class="line">not(sub(exp(0x2, 0xc0), exp(0x2, 0x80)))</span><br><span class="line">and</span><br><span class="line">0x300000000000000000000000000000000</span><br><span class="line">or</span><br><span class="line">sub(exp(0x2, 0xc0), 0x1)</span><br><span class="line">and</span><br><span class="line">0x4000000000000000000000000000000000000000000000000</span><br><span class="line">or</span><br><span class="line">dup2</span><br><span class="line">sstore</span><br></pre></td></tr></table></figure>
 <p>See what? We only have one sstore here. </p>
-<ul>
-<li>Mapping</li>
-</ul>
+<p><b>Mapping</b></p>
 <p>Let’s try mapping in solidity here!</p>
-<p>sam@hero:~/Documents/test$ cat c1.sol<br>pragma solidity ^0.4.11;<br>contract C {<br>    mapping(uint256 =&gt; uint256) items;</p>
-<pre><code>function C() {
-  items[0xbeef] = 7;
-}
-</code></pre><p>}</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sam@hero:~/Documents/<span class="built_in">test</span>$ cat c1.sol </span><br><span class="line">pragma solidity ^0.4.11;</span><br><span class="line">contract C &#123;</span><br><span class="line">    mapping(uint256 =&gt; uint256) items;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="function"><span class="title">C</span></span>() &#123;</span><br><span class="line">      items[0xbeef] = 7;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Compile it.</p>
-<p>  pop<br>  0xbeef<br>  0x0<br>  swap1<br>  dup2<br>  mstore<br>  0x20<br>  mstore<br>  0x7<br>  0xf795696b84ec505a06e455ed35745d482b1c95debff7502f2dfa10a8a8820138<br>  sstore</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">pop</span><br><span class="line">0xbeef</span><br><span class="line">0x0</span><br><span class="line">swap1</span><br><span class="line">dup2</span><br><span class="line">mstore</span><br><span class="line">0x20</span><br><span class="line">mstore</span><br><span class="line">0x7</span><br><span class="line">0xf795696b84ec505a06e455ed35745d482b1c95debff7502f2dfa10a8a8820138</span><br><span class="line">sstore</span><br></pre></td></tr></table></figure>
 <p>We see that EVM doesn’t use 0xbeef we provided as the key. Instead it used a hash number. And that’s keccak256 result.</p>
 <p>So let’s make some changes and use much large values.</p>
-<p>pragma solidity ^0.4.11;<br>contract C {<br>    mapping(uint256 =&gt; Tuple) tuples;<br>    struct Tuple {<br>      uint256 a;<br>      uint256 b;<br>      uint256 c;<br>    }<br>    function C() {<br>      tuples[0x1].a = 0x1A;<br>      tuples[0x1].b = 0x1B;<br>      tuples[0x1].c = 0x1C;<br>    }<br>}</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.11;</span><br><span class="line">contract C &#123;</span><br><span class="line">    mapping(uint256 =&gt; Tuple) tuples;</span><br><span class="line">    struct Tuple &#123;</span><br><span class="line">      uint256 a;</span><br><span class="line">      uint256 b;</span><br><span class="line">      uint256 c;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="function"><span class="title">C</span></span>() &#123;</span><br><span class="line">      tuples[0x1].a = 0x1A;</span><br><span class="line">      tuples[0x1].b = 0x1B;</span><br><span class="line">      tuples[0x1].c = 0x1C;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>So it uses 3 sstore now.</p>
-<p>  0x1a<br>  0xada5013122d395ba3c54772283fb069b10426056ef8ca54750cb9bb552a59e7d<br>  sstore<br>  0x1b<br>  0xada5013122d395ba3c54772283fb069b10426056ef8ca54750cb9bb552a59e7e<br>  sstore<br>  0x1c<br>  0xada5013122d395ba3c54772283fb069b10426056ef8ca54750cb9bb552a59e7f<br>  sstore</p>
-<ul>
-<li>Array<br>Array is just like mapping. Let’s consider a simple array here.</li>
-</ul>
-<p>pragma solidity ^0.4.11;<br>contract C {<br>    uint256[] chunks;<br>    function C() {<br>      chunks.push(0xAA);<br>      chunks.push(0xBB);<br>      chunks.push(0xCC);<br>    }<br>}</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">0x1a</span><br><span class="line">0xada5013122d395ba3c54772283fb069b10426056ef8ca54750cb9bb552a59e7d</span><br><span class="line">sstore</span><br><span class="line">0x1b</span><br><span class="line">0xada5013122d395ba3c54772283fb069b10426056ef8ca54750cb9bb552a59e7e</span><br><span class="line">sstore</span><br><span class="line">0x1c</span><br><span class="line">0xada5013122d395ba3c54772283fb069b10426056ef8ca54750cb9bb552a59e7f</span><br><span class="line">sstore</span><br></pre></td></tr></table></figure>
+<p><b>Array</b><br>Array is just like mapping. Let’s consider a simple array here.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.11;</span><br><span class="line">contract C &#123;</span><br><span class="line">    uint256[] chunks;</span><br><span class="line">    <span class="keyword">function</span> <span class="function"><span class="title">C</span></span>() &#123;</span><br><span class="line">      chunks.push(0xAA);</span><br><span class="line">      chunks.push(0xBB);</span><br><span class="line">      chunks.push(0xCC);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>The 4 storage slots are like this. while the first one is the length.</p>
-<p>key: 0x0000000000000000000000000000000000000000000000000000000000000000<br>value: 0x0000000000000000000000000000000000000000000000000000000000000003<br>key: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563<br>value: 0x00000000000000000000000000000000000000000000000000000000000000aa<br>key: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e564<br>value: 0x00000000000000000000000000000000000000000000000000000000000000bb<br>key: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e565<br>value: 0x00000000000000000000000000000000000000000000000000000000000000cc</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">key: 0x0000000000000000000000000000000000000000000000000000000000000000</span><br><span class="line">value: 0x0000000000000000000000000000000000000000000000000000000000000003</span><br><span class="line">key: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563</span><br><span class="line">value: 0x00000000000000000000000000000000000000000000000000000000000000aa</span><br><span class="line">key: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e564</span><br><span class="line">value: 0x00000000000000000000000000000000000000000000000000000000000000bb</span><br><span class="line">key: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e565</span><br><span class="line">value: 0x00000000000000000000000000000000000000000000000000000000000000cc</span><br></pre></td></tr></table></figure>
 <p>For a dynamic array.</p>
-<p>pragma solidity ^0.4.11;<br>contract C {<br>    uint128[] s;<br>    function C() {<br>        s.length = 4;<br>        s[0] = 0xAA;<br>        s[1] = 0xBB;<br>        s[2] = 0xCC;<br>        s[3] = 0xDD;<br>    }<br>}</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.11;</span><br><span class="line">contract C &#123;</span><br><span class="line">    uint128[] s;</span><br><span class="line">    <span class="keyword">function</span> <span class="function"><span class="title">C</span></span>() &#123;</span><br><span class="line">        s.length = 4;</span><br><span class="line">        s[0] = 0xAA;</span><br><span class="line">        s[1] = 0xBB;</span><br><span class="line">        s[2] = 0xCC;</span><br><span class="line">        s[3] = 0xDD;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>It will fit into 2 slots.</p>
-<p>key: 0x0000000000000000000000000000000000000000000000000000000000000000<br>value: 0x0000000000000000000000000000000000000000000000000000000000000004<br>key: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563<br>value: 0x000000000000000000000000000000bb000000000000000000000000000000aa<br>key: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e564<br>value: 0x000000000000000000000000000000dd000000000000000000000000000000cc</p>
-<ul>
-<li>How a function in smart contract gets called</li>
-</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">key: 0x0000000000000000000000000000000000000000000000000000000000000000</span><br><span class="line">value: 0x0000000000000000000000000000000000000000000000000000000000000004</span><br><span class="line">key: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563</span><br><span class="line">value: 0x000000000000000000000000000000bb000000000000000000000000000000aa</span><br><span class="line">key: 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e564</span><br><span class="line">value: 0x000000000000000000000000000000dd000000000000000000000000000000cc</span><br></pre></td></tr></table></figure>
+<p><b>How a function in smart contract gets called</b></p>
 <p>So for a function like this:</p>
-<p>pragma solidity ^0.4.11;<br>contract C {<br>  uint256 a;<br>  function setA(uint256 _a) {<br>    a = _a;<br>  }<br>  function getA() returns(uint256) {<br>    return a;<br>  }<br>}</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.11;</span><br><span class="line">contract C &#123;</span><br><span class="line">  uint256 a;</span><br><span class="line">  <span class="keyword">function</span> setA(uint256 _a) &#123;</span><br><span class="line">    a = _a;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">function</span> getA() returns(uint256) &#123;</span><br><span class="line">    <span class="built_in">return</span> a;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>If you deploy it on the network, you will get a contract address.</p>
 <p>0x62650ae5c5777d1660cc17fcd4f48f6a66b9a4c2</p>
 <p>When you want to make a call to setA, you are actually making a transaction. The destination is </p>
@@ -225,13 +190,7 @@ d = 4;
 <p>0xee919d500000000000000000000000000000000000000000000000000000000000000001</p>
 <p>Here the first 4 bytes are method selector and the last one is the argument.</p>
 <p>And if you want to use getA(), you don’t need to pay since it won’t change anything. The input data should be</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>sha3(“getA()”)[0:8].hex()<br>‘d46300fd’</p>
-</blockquote>
-</blockquote>
-</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; sha3(<span class="string">"getA()"</span>)[0:8].hex()</span><br><span class="line"><span class="string">'d46300fd'</span></span><br></pre></td></tr></table></figure>
 
             </div>
           
