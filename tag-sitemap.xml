@@ -80,7 +80,14 @@
 
     <url>
         <loc>http://samohyes.github.io/tags/2018/</loc>
-        <lastmod>2018-09-14T20:08:39.562Z</lastmod>
+        <lastmod>2018-09-14T20:14:07.270Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://samohyes.github.io/tags/My-CVEs/</loc>
+        <lastmod>2018-09-14T20:14:07.270Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
