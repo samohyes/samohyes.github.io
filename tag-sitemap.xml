@@ -2,13 +2,6 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
-        <loc>http://samohyes.github.io/tags/Android-reverse/</loc>
-        <lastmod>2017-12-31T08:39:22.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://samohyes.github.io/tags/Malware-analysis/</loc>
         <lastmod>2018-01-15T06:04:32.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -37,20 +30,6 @@
     </url>
 
     <url>
-        <loc>http://samohyes.github.io/tags/Android-exploitation/</loc>
-        <lastmod>2018-06-04T00:46:37.629Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://samohyes.github.io/tags/Qemu/</loc>
-        <lastmod>2018-07-05T01:03:33.628Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://samohyes.github.io/tags/eos/</loc>
         <lastmod>2018-08-01T04:33:17.112Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -65,13 +44,6 @@
     </url>
 
     <url>
-        <loc>http://samohyes.github.io/tags/2018/</loc>
-        <lastmod>2018-09-14T20:14:07.270Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://samohyes.github.io/tags/My-CVEs/</loc>
         <lastmod>2018-09-14T20:14:07.270Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -79,8 +51,22 @@
     </url>
 
     <url>
+        <loc>http://samohyes.github.io/tags/2018/</loc>
+        <lastmod>2018-09-14T20:18:47.133Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://samohyes.github.io/tags/Android/</loc>
+        <lastmod>2018-09-14T20:19:09.817Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>http://samohyes.github.io/tags/2017/</loc>
-        <lastmod>2018-09-14T20:16:13.218Z</lastmod>
+        <lastmod>2018-09-14T20:19:09.817Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
