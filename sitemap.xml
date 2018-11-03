@@ -7,6 +7,11 @@
     </sitemap>
 
     <sitemap>
+        <loc>http://samohyes.github.io/page-sitemap.xml</loc>
+        <lastmod>2018-11-03T13:39:48.553Z</lastmod>
+    </sitemap>
+
+    <sitemap>
         <loc>http://samohyes.github.io/tag-sitemap.xml</loc>
         <lastmod>2018-01-15T06:04:32.000Z</lastmod>
     </sitemap>
