@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="Blockchain: 51% attack on Verge"/>
+
+
+
+
+  <meta name="keywords" content="2018,Block chain," />
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Xudong">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/1.jpg?v=1.1" />
+
+
+
+<link rel="canonical" href="http://samohyes.github.io/2018/11/08/Blockchain-51-attack-on-Verge/"/>
+
+
+<meta name="description" content="Some key notes on the Verge white paper: Tor IntergrationTor directs internet traffic through a free worldwide volunteer overlay network consisting of more than">
+<meta name="keywords" content="2018,Block chain">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Blockchain: 51% attack on Verge">
+<meta property="og:url" content="http://samohyes.github.io/2018/11/08/Blockchain-51-attack-on-Verge/index.html">
+<meta property="og:site_name" content="Xudong">
+<meta property="og:description" content="Some key notes on the Verge white paper: Tor IntergrationTor directs internet traffic through a free worldwide volunteer overlay network consisting of more than seven thousand relays to conceal a user">
+<meta property="og:image" content="http://samohyes.github.io/2018/11/08/Blockchain-51-attack-on-Verge/1.PNG">
+<meta property="og:updated_time" content="2018-11-09T04:31:26.067Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Blockchain: 51% attack on Verge">
+<meta name="twitter:description" content="Some key notes on the Verge white paper: Tor IntergrationTor directs internet traffic through a free worldwide volunteer overlay network consisting of more than seven thousand relays to conceal a user">
+<meta name="twitter:image" content="http://samohyes.github.io/2018/11/08/Blockchain-51-attack-on-Verge/1.PNG">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Blockchain: 51% attack on Verge - Xudong </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Xudong</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Blockchain: 51% attack on Verge
+        
+      </h1>
+
+      <time class="post-time">
+          Nov 08 2018
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><b>Some key notes on the Verge white paper:<b></b></b></p>
+<p>Tor Intergration<br>Tor directs internet traffic through a free worldwide volunteer overlay network consisting of more than seven thousand relays to conceal a user’s location and usage from anyone conducting network surveillance or traffic analysis.</p>
+<p>I2P Integration<br>I2p is highly obfuscated tunneling service using ipv6 that anonymizes all Verge data being sent over the network. Each client application has their i2p “router” build several inbound and outbound “tunnels”. In order to find other client’s inbound tunnels efficiently, they use a custom structured distributed hash table.</p>
+<p>Electrum<br>One of the wallets that provide native Tor and i2p support.</p>
+<p>Multi-Algorithm Support<br>It supports 5 Proof-of-Work algorithm that run on its blockchain: Scrypt,X17,Lyra2rev2,myr-groestl,blake2s. All have a 30-second block target block time.</p>
+<p>Wraith Protocol:<br>Make it possible to choose between a public or private ledger.<br>Use Elliptic-curve Diffie-Hellman for stealth addressing.</p>
+<p>Atomic Swaps:<br>Allows for interoperability between Verge and all other cryptocurrencies in circulation with Atomic swap capabilities enabled.</p>
+<p><b>Original attack analysis:<b><br><a href="https://www.freebuf.com/column/169210.html" target="_blank" rel="noopener">https://www.freebuf.com/column/169210.html</a></b></b></p>
+<p>Let’s take a look at the blockchain.<br><img src="/2018/11/08/Blockchain-51-attack-on-Verge/1.PNG"></p>
+<p>The attacker changed the timestamp of new blocks to make the time of producing a new block increasing to 5 mins which leads to the whole chain decrease the difficulty. And we can get from the code that, the new block has to pass this check.<br></p>
+<p>And since the attacker change the time stamp. The pindexPrev-&gt;GetBlockTime() has increased. So other miners that didn’t change the timestamp can’t mine a new block! In this case, the attacker can control the network and no block produced by other miners will be added to the chain.</p>
+<p>And we can see that the attacker change time stamp to be smaller in 2007365,2007367 just to increase the difficulty so the difficulty of the chain won’t be too small.</p>
+<p>This attack really caused a huge lose. </p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/2018/">2018</a>
+		  
+			<a href="/tags/Block-chain/">Block chain</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/10/29/Blockchain-dasp-top-10-fake-computational-power-51-attack/">
+        <span class="next-text nav-default">Blockchain: dasp top 10, fake computational power, 51 % attack</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2018
+    <span class="footer-author">Xudong.</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
