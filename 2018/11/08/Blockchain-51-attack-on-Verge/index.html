@@ -43,7 +43,8 @@
 <meta property="og:site_name" content="Xudong">
 <meta property="og:description" content="Some key notes on the Verge white paper: Tor IntergrationTor directs internet traffic through a free worldwide volunteer overlay network consisting of more than seven thousand relays to conceal a user">
 <meta property="og:image" content="http://samohyes.github.io/2018/11/08/Blockchain-51-attack-on-Verge/1.PNG">
-<meta property="og:updated_time" content="2018-11-09T04:45:44.638Z">
+<meta property="og:image" content="http://samohyes.github.io/2018/11/08/Blockchain-51-attack-on-Verge/2.PNG">
+<meta property="og:updated_time" content="2018-11-10T01:39:52.536Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Blockchain: 51% attack on Verge">
 <meta name="twitter:description" content="Some key notes on the Verge white paper: Tor IntergrationTor directs internet traffic through a free worldwide volunteer overlay network consisting of more than seven thousand relays to conceal a user">
@@ -141,7 +142,7 @@
 <p>Atomic Swaps:<br>Allows for interoperability between Verge and all other cryptocurrencies in circulation with Atomic swap capabilities enabled.</p>
 <p><b>Original attack analysis:<b><br><a href="https://www.freebuf.com/column/169210.html" target="_blank" rel="noopener">https://www.freebuf.com/column/169210.html</a></b></b></p>
 <p>Let’s take a look at the blockchain.<br><img src="/2018/11/08/Blockchain-51-attack-on-Verge/1.PNG"></p>
-<p>The attacker changed the timestamp of new blocks to make the time of producing a new block increasing to 5 mins which leads to the whole chain decrease the difficulty. And we can get from the code that, the new block has to pass this check.<br></p>
+<p>The attacker changed the timestamp of new blocks to make the time of producing a new block increasing to 5 mins which leads to the whole chain decrease the difficulty. And we can get from the code that, the new block has to pass this check.<br><img src="/2018/11/08/Blockchain-51-attack-on-Verge/2.PNG"></p>
 <p>And since the attacker change the time stamp. The pindexPrev-&gt;GetBlockTime() has increased. So other miners that didn’t change the timestamp can’t mine a new block! In this case, the attacker can control the network and no block produced by other miners will be added to the chain.</p>
 <p>And we can see that the attacker change time stamp to be smaller in 2007365,2007367 just to increase the difficulty so the difficulty of the chain won’t be too small.</p>
 <p>This attack really caused a huge lose. </p>
@@ -168,7 +169,7 @@
     
       <a class="next" href="/2018/10/29/Blockchain-dasp-top-10-fake-computational-power-51-attack/">
         <span class="next-text nav-default">Blockchain: dasp top 10, fake computational power, 51 % attack</span>
-        <span class="prev-text nav-mobile">下一篇</span>
+        <span class="prev-text nav-mobile">Next</span>
         <i class="iconfont icon-right"></i>
       </a>
     
@@ -199,7 +200,7 @@
 
     <span class="post-meta-divider">|</span>
     <span class="power-by">
-        由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a> 强力驱动
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
     </span>
 </span>
 
