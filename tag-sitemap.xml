@@ -58,22 +58,22 @@
     </url>
 
     <url>
+        <loc>http://samohyes.github.io/tags/others/</loc>
+        <lastmod>2018-11-10T22:18:30.249Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>http://samohyes.github.io/tags/2018/</loc>
-        <lastmod>2018-11-02T01:32:31.922Z</lastmod>
+        <lastmod>2018-11-27T03:06:28.382Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>http://samohyes.github.io/tags/Block-chain/</loc>
-        <lastmod>2018-11-02T01:32:31.922Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://samohyes.github.io/tags/others/</loc>
-        <lastmod>2018-11-10T22:18:30.249Z</lastmod>
+        <lastmod>2018-11-27T03:06:28.382Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

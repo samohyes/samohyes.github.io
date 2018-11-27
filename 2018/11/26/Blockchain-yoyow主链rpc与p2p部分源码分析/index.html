@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="Blockchain: yoyow主链rpc与p2p部分源码分析"/>
+
+
+
+
+  <meta name="keywords" content="2018,Block chain," />
+
+
+
+
+
+  <link rel="alternate" href="/default" title="秋水">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/1.jpg?v=1.1" />
+
+
+
+<link rel="canonical" href="http://samohyes.github.io/2018/11/26/Blockchain-yoyow主链rpc与p2p部分源码分析/"/>
+
+
+<meta name="description" content="前几周每天抽了点时间看了下yoyow的一部分源码，总想着找个漏洞，但是发现其虽然用了c++但是大量使用了bitshares的fc库，比较安全，而且我这个水平也蛮菜，没找出啥漏洞来。这里分享一下自己的一点小记录吧，后面会找带虚拟机的主链来分析下看看有没有漏洞。 ###programs/yoyow_node/main.cp">
+<meta name="keywords" content="2018,Block chain">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Blockchain: yoyow主链rpc与p2p部分源码分析">
+<meta property="og:url" content="http://samohyes.github.io/2018/11/26/Blockchain-yoyow主链rpc与p2p部分源码分析/index.html">
+<meta property="og:site_name" content="秋水">
+<meta property="og:description" content="前几周每天抽了点时间看了下yoyow的一部分源码，总想着找个漏洞，但是发现其虽然用了c++但是大量使用了bitshares的fc库，比较安全，而且我这个水平也蛮菜，没找出啥漏洞来。这里分享一下自己的一点小记录吧，后面会找带虚拟机的主链来分析下看看有没有漏洞。 ###programs/yoyow_node/main.cpp运行yoyow node, 整个node入口在programs/yoyow_n">
+<meta property="og:updated_time" content="2018-11-27T03:06:28.382Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Blockchain: yoyow主链rpc与p2p部分源码分析">
+<meta name="twitter:description" content="前几周每天抽了点时间看了下yoyow的一部分源码，总想着找个漏洞，但是发现其虽然用了c++但是大量使用了bitshares的fc库，比较安全，而且我这个水平也蛮菜，没找出啥漏洞来。这里分享一下自己的一点小记录吧，后面会找带虚拟机的主链来分析下看看有没有漏洞。 ###programs/yoyow_node/main.cpp运行yoyow node, 整个node入口在programs/yoyow_n">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Blockchain: yoyow主链rpc与p2p部分源码分析 - 秋水 </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">秋水</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Blockchain: yoyow主链rpc与p2p部分源码分析
+        
+      </h1>
+
+      <time class="post-time">
+          Nov 26 2018
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>前几周每天抽了点时间看了下yoyow的一部分源码，总想着找个漏洞，但是发现其虽然用了c++但是大量使用了bitshares的fc库，比较安全，而且我这个水平也蛮菜，没找出啥漏洞来。这里分享一下自己的一点小记录吧，后面会找带虚拟机的主链来分析下看看有没有漏洞。</p>
+<p>###<br>programs/yoyow_node/main.cpp<br>运行yoyow node, 整个node入口在programs/yoyow_node/main.cpp中的main函数部分。<br>可见程序的开始，load了config.ini文件，接着使用node-&gt;starup() startup_plugins()启动了节点，并且还看到它用fc库设置了退出信号的Handler。</p>
+<p>###<br>programs/yoyo_client/main.cpp<br>client的入口函数。进口处我们看到这里使用boost库来设置了rpc节点的相关默认参数。并用fc库设置了相关的log文件。<br>之后操作wallet_data,通过fc库中的websocket连接到Node上面。同时使用Boost库监听信号，进行unlock操作。后面可见它这有websocket,websocket tls,http这三种server。<br>根据官网上给的指示-H，显然我们使用的是http server。</p>
+<p>###<br>在libraries/app/application.cpp<br>class application_impl : public net::node_delegate 内部函数 void startup()处，可以看到那里创建 blockchain文件夹的相关操作。</p>
+<p>在handle_block处，<br>if (!sync_mode || blk_msg.block.block_num() % 10000 == 0)<br>一段时间没有出块，应该是这里的sync_mpde改变了，同时需要每1000个block_num()打印一次。</p>
+<p>###<br>在libraries/net/node.cpp中，调用了handle_block 等函数。<br>通过打印Log发现，是node.cpp中的void node_impl::send_sync_block_to_node_delegate 函数调用了handle_block，<br>_delegate-&gt;handle_block(block_message_to_send, true, contained_transaction_message_ids);<br>不过介于这里的sync_mode只有这个地方是true,其实不需要打印log就可以知道了。</p>
+<p>================RPC接口分析=====================</p>
+<p>###<br>libraries\wallet\include\graphene\wallet.hpp 1314行我们看到了rpc接口都列出。包括unlock set_password这些。</p>
+<p>###<br>libraries\wallet\wallet.cpp 中我们看到了这些rpc调用的具体实现。现在就让我们仔细分析这些rpc call看看能不能找出漏洞来。</p>
+<p>1.set_password api<br>首先通过is_new判断这个wallet是否为new，如果不是的话，也就是不是第一次创建并且它上锁了的wallet就需要先Unlock它。接下来，它将password以及长度算了一个sha512的hash出来，讲my-&gt;_checksum设置为这个值。在libraries\wallet\include\graphene\wallet.hpp中我们看到这里的my是一个指向wallet_api_impl的智能指针。而这个class正处在wallet.cpp中。即_checksum是wallet.cpp中的一个fc::sha512。设置了checksum也就是密码后，就执行lock()给钱包加锁。</p>
+<p>2.lock api<br>首先通过is_lock()检查是否已经上锁了。<br>接下来调用encrypt_keys()函数。转到这个函数，发现内部为my-&gt;encrypt_keys();这个函数将my-&gt;_keys 和 my-&gt;_checksum打包然后用aes加密了起来。_wallet.cipher_keys = fc::aes_encrypt( data.checksum, plain_txt );接下来就把keys给清空了。</p>
+<p>3.unlock api<br>对应着来看下这个api。其实很简单，取了输入的password，配上size算出hash。然后去进行aes解密，同时判断那个check_sum是否相同，然后改变lock的状态。</p>
+<p>4.import_key api<br>首先检查wallet是否解锁，解锁后转化了下Key的格式，然后调用my-&gt;import_key。这个函数的实现在wallet.cpp的678行。可以看到它这里存到了_keys这个map结构里面。</p>
+<p>5.info api<br>具体实现还是在wallet_api_impl中的info()函数，并将信息存到了一个mutable_variant_object对象中返回。</p>
+<p>6.get_block api<br>实现很简单。my-&gt;_remote_db-&gt;get_block(num);通过fc库里面的一个database api实现block的查询。可见其采用了get_full_accounts_by_uid这个api。这个api里面根据option传回相应的一些查询对象。</p>
+<p>7.transfer api<br>首先这个接口需要unlock。可见这里收集了from to 广播内容等参数，打包进了signed_transaction这个class里面，然后调用了sign_transaction函数返回结果。sign_transaction函数从接受参数来看不太像会有二进制洞，就不具体看流程了。</p>
+<p>8.serialize_transaction<br>这个函数看起来蛮有趣的，fc::to_hex(fc::raw::pack(tx))。 打包一个transaction,然后to_hex了。不过实现在fc库里面了。</p>
+<p>rpc接口就先告一段落吧，大多都是逻辑相关，应该也出不了什么二进制洞，所以后面就分析p2p接口吧。</p>
+<p>================P2P函数分析=====================</p>
+<p>libraries/net/node.cpp</p>
+<p>1.on_message 函数<br>这个函数关键就是switch了，通过判断是哪种message再调用不同的Message处理函数。这个on_message函数这里传入的第一个参数是peer_connection类，这个类定义在libraries/net/include/graphene/net/peer_connection.hpp中。</p>
+<p>2.on_hello_message 函数<br>函数中显示验证node id，将hello_message中的一些结构体复制到了peer_connection这个class中。接下来调用了parse_hello_user_data_for_peer这个函数，parse 了 hello_message_received.user_data 此为一个fc::variant_object class，定义在fc namespace下面，可以为多种type。这里就是提取了user_data中的一些数据。<br>而后其检测签名是否正确，是否和自己在同一条链上。而且这里后面还检测了allowed_peers。必须在这个中才能让两个node连接。如果双方握手成功会回复<br>originating_peer-&gt;send_message(message(connection_accepted_message()));</p>
+<p>3.on_connection_accepted_message 函数<br>这个函数是在自己发送了hello消息后调用的。如果对方接受了自己的hello就调用。同时检查自己是否被自己的防火墙挡住了。</p>
+<p>4.on_connection_rejected_message 函数<br>如果被拒了就删掉这个对象了。</p>
+<p>5.on_address_request_message 函数<br>更新了数据库，输入参数只是一个 int。</p>
+<p>6.on_address_message 函数<br>收到一些地址信息，更新地址数据库。如果收到新的地址，它这里会调用trigger_p2p_network_connect_loop()。</p>
+<p>7.on_fetch_blockchain_item_ids_message 函数<br>应该是收到了节点的同步请求。</p>
+<p>8.on_blockchain_item_ids_inventory_message 函数<br>应该是接受了函数7的消息，应该是获得了可以从peer那里sync的block列表，然后去sync。</p>
+<p>9.on_fetch_items_message 函数<br>接受了对方fetch item的请求然后返回过去对应的block或者一条消息。</p>
+<p>10.on_item_not_available_message 函数<br>peer没有我们要的那个item。</p>
+<p>11.on_item_ids_inventory_message 函数</p>
+<p>12.on_closing_connection_message 函数<br>连接端口，打印错误信息。</p>
+<p>13.block_message_to_process 函数<br>应该是判断实在normal 还是 sync 的时候拿到了这个block然后调用了不同的函数</p>
+<p>14.process_block_during_normal_operation 函数</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/2018/">2018</a>
+		  
+			<a href="/tags/Block-chain/">Block chain</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/11/10/Declaration-声明-Change-the-post-style/">
+        <span class="next-text nav-default">Declaration[声明]: Change the post style</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2018
+    <span class="footer-author">秋水.</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
