@@ -37,13 +37,6 @@
     </url>
 
     <url>
-        <loc>http://samohyes.github.io/tags/Android/</loc>
-        <lastmod>2018-09-14T20:19:09.817Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://samohyes.github.io/tags/2017/</loc>
         <lastmod>2018-09-14T20:19:09.817Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -65,15 +58,22 @@
     </url>
 
     <url>
-        <loc>http://samohyes.github.io/tags/2018/</loc>
+        <loc>http://samohyes.github.io/tags/Block-chain/</loc>
         <lastmod>2018-11-27T03:06:28.382Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://samohyes.github.io/tags/Block-chain/</loc>
-        <lastmod>2018-11-27T03:06:28.382Z</lastmod>
+        <loc>http://samohyes.github.io/tags/Android/</loc>
+        <lastmod>2018-11-28T22:57:14.232Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://samohyes.github.io/tags/2018/</loc>
+        <lastmod>2018-11-28T22:57:14.232Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
