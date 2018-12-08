@@ -42,7 +42,7 @@
 <meta property="og:url" content="http://samohyes.github.io/2018/07/04/Qemu-source-user-mode-initialization-and-ioctls/index.html">
 <meta property="og:site_name" content="秋水">
 <meta property="og:description" content="For past few weeks, I’ve been reading qemu source code and cross compiling it for android. I was going to fuzz some binaries. But I can’t go into details about that projects so here I just share some">
-<meta property="og:updated_time" content="2018-09-14T20:18:08.928Z">
+<meta property="og:updated_time" content="2018-12-08T21:05:19.752Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Qemu source: user mode initialization and ioctls">
 <meta name="twitter:description" content="For past few weeks, I’ve been reading qemu source code and cross compiling it for android. I was going to fuzz some binaries. But I can’t go into details about that projects so here I just share some">
@@ -131,8 +131,6 @@
     
             <div class="post-content">
             <p>For past few weeks, I’ve been reading qemu source code and cross compiling it for android. I was going to fuzz some binaries. But I can’t go into details about that projects so here I just share some thing about qemu source code with you. This post is mainly about qemu user mode and its ioctls realization.</p>
-<p>I’ve record a video here for those who prefer to watch videos.</p>
-<div class="video-container"><iframe src="//www.youtube.com/embed/OFqoUd_2WOk" frameborder="0" allowfullscreen></iframe></div>
 <p>So for the qemu user mode, the point that we start with is <b><i>/linux-user/main.c</i></b>. The story starts at the main function here. There are two function calls here that I want to mention.</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">syscall_init();</span><br><span class="line"></span><br><span class="line">cpu_loop(env);</span><br></pre></td></tr></table></figure>
 <p>For the syscall_init(), we can find it in the <b><i>/linux-user/syscall.c</i></b> . In this function, we can find this piece of code.</p>

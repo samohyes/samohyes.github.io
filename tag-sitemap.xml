@@ -44,13 +44,6 @@
     </url>
 
     <url>
-        <loc>http://samohyes.github.io/tags/My-CVEs/</loc>
-        <lastmod>2018-09-15T01:07:59.223Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://samohyes.github.io/tags/Block-chain/</loc>
         <lastmod>2018-11-27T03:06:28.382Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -58,22 +51,29 @@
     </url>
 
     <url>
+        <loc>http://samohyes.github.io/tags/others/</loc>
+        <lastmod>2018-12-08T20:07:06.140Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://samohyes.github.io/tags/My-CVEs/</loc>
+        <lastmod>2018-12-08T21:04:55.796Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>http://samohyes.github.io/tags/Android/</loc>
-        <lastmod>2018-11-28T23:02:32.888Z</lastmod>
+        <lastmod>2018-12-08T21:05:53.198Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>http://samohyes.github.io/tags/2018/</loc>
-        <lastmod>2018-11-28T23:02:32.888Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://samohyes.github.io/tags/others/</loc>
-        <lastmod>2018-12-08T20:07:06.140Z</lastmod>
+        <lastmod>2018-12-08T21:05:53.198Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
